@@ -3,9 +3,12 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.Broadcast;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.CrashedBroadcast;
+import bgu.spl.mics.application.messages.DetectedObjectsEvent;
 import bgu.spl.mics.application.messages.TerminatedBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.objects.Camera;
+import bgu.spl.mics.application.objects.DetectedObject;
+import bgu.spl.mics.application.objects.StampedDetectedObjects;
 
 /**
  * CameraService is responsible for processing data from the camera and
@@ -35,15 +38,16 @@ public class CameraService extends MicroService {
      */
     @Override
     protected void initialize() {
-        this.subscribeBroadcast(TickBroadcast.class, this::detectObj);
+        this.subscribeBroadcast(TickBroadcast.class,(TickBroadcast t) -> {
+            StampedDetectedObjects objs = camera.DetectObjects(t.getTick());
+            if(objs != null){
+                sendEvent(new DetectedObjectsEvent(objs));
+            }
+        });
         this.subscribeBroadcast(TerminatedBroadcast.class,boradcast -> terminate());
         this.subscribeBroadcast(CrashedBroadcast.class,boradcast -> terminate());
 
 
     }
-    private void detectObj(TickBroadcast t) {
-        // parse json file
-        // see what objects are detected in t.time + f
-        // send detected object event
-    }
+
 }

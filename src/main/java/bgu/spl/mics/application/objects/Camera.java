@@ -10,12 +10,12 @@ public class Camera {
     private int id; // The ID of the camera.
     private int frequency; // The time interval at which the camera sends new events.
     private STATUS status; // Camera status: Up, Down, or Error.
-    private List<DetectedObject> detectedObjectsList; // List of detected objects with timestamps.
+    private List<StampedDetectedObjects> detectedObjectsList; // List of detected objects with timestamps.
 
     // Enum for status
 
     // Constructor
-    public Camera(int id, int frequency, STATUS status, List<DetectedObject> detectedObjectsList) {
+    public Camera(int id, int frequency, STATUS status, List<StampedDetectedObjects> detectedObjectsList) {
         this.id = id;
         this.frequency = frequency;
         this.status = status;
@@ -35,7 +35,7 @@ public class Camera {
         return status;
     }
 
-    public List<DetectedObject> getDetectedObjectsList() {
+    public List<StampedDetectedObjects> getDetectedObjectsList() {
         return detectedObjectsList;
     }
 
@@ -52,7 +52,15 @@ public class Camera {
         this.status = status;
     }
 
-    public void setDetectedObjectsList(List<DetectedObject> detectedObjectsList) {
+    public void setDetectedObjectsList(List<StampedDetectedObjects> detectedObjectsList) {
         this.detectedObjectsList = detectedObjectsList;
     }
+
+    // other methods:
+
+    public StampedDetectedObjects DetectObjects(int time){
+        //TO-DO implement
+        return null ;
+    }
+
 }
