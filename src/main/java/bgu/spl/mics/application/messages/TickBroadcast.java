@@ -4,14 +4,14 @@ import bgu.spl.mics.Broadcast;
 
 public class TickBroadcast implements Broadcast {
 
-    private int tick;
+    private int time;
 
-    public TickBroadcast(int tick) {
-        this.tick = tick;
+    public TickBroadcast(int time) {
+        this.time = time;
     }
 
     public int getTick() {
-        return tick;
+        return time;
     }
 
 }
