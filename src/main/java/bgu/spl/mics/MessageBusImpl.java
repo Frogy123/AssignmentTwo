@@ -55,7 +55,6 @@ public class MessageBusImpl implements MessageBus {
 
 	// SINGLETON;
 
-
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
 		RegisteredMicroService rm = regTable.get(m);
@@ -135,6 +134,22 @@ public class MessageBusImpl implements MessageBus {
 	public Message awaitMessage(MicroService m) throws InterruptedException {
 		RegisteredMicroService rm = regTable.get(m);
 		return rm.myMessageQueue.take(); // will wait if empty
+	}
+
+
+	// Queries for testing:
+	public Boolean isRegistered(MicroService m){
+		return regTable.containsKey(m);
+	}
+
+	public Boolean isSubscribedToBroadcast(Class<? extends Broadcast> type, MicroService m){
+		RegisteredMicroService rm = regTable.get(m);
+		return broadcastSubsTable.get(type).contains(rm) && rm.broadcastSubs.contains(type);
+	}
+
+	public <T> Boolean isSubscribedToEvent(Class<? extends Event<T>> type, MicroService m){
+		RegisteredMicroService rm = regTable.get(m);
+		return  eventSubsTable.get(type).contains(rm) && rm.eventSubs.contains(type);
 	}
 
 }
