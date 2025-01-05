@@ -69,11 +69,23 @@ public class Camera {
      * @return detected objects at a particular time
      *
      * @pre: none
-     * @post:
+     * @post: If an object with time exists in detectedObjectsList, that object is returned.
+     * If no such object exists, the method returns null.
      */
     public StampedDetectedObjects DetectObjects(int time){
-        //TO-DO implement
-        return null ;
+        for(StampedDetectedObjects objs: detectedObjectsList){
+            if (objs.getTime() == time){
+                try {
+                    Thread.sleep(frequency);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // Restore the interrupt status
+                    throw new RuntimeException("Thread sleep interrupted", e);
+                }
+
+                return objs;
+            }
+        }
+        return null;
     }
 
 }
