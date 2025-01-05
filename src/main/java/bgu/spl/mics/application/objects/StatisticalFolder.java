@@ -10,6 +10,9 @@ public class StatisticalFolder {
     private int numDetectedObjects;
     private int numTrackedObjects;
     private int numLandmarks;
+
+    static StatisticalFolder instance = null;
+
     public StatisticalFolder() {
         systemRunTime = 0;
         numDetectedObjects = 0;
@@ -31,14 +34,21 @@ public class StatisticalFolder {
     public void incrementSystemRunTime() {
         systemRunTime++;
     }
-    public void incrementNumDetectedObjects() {
-        numDetectedObjects++;
+    public void incrementNumDetectedObjects(int num) {
+        numDetectedObjects+=num;
     }   
     public void incrementNumTrackedObjects() {
         numTrackedObjects++;
     }
     public void incrementNumLandmarks() {
         numLandmarks++;
+    }
+
+    public static StatisticalFolder getInstance() {
+        if (instance == null) {
+            instance = new StatisticalFolder();
+        }
+        return instance;
     }
 
 }

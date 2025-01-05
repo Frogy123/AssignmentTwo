@@ -1,4 +1,5 @@
 package bgu.spl.mics.application.objects;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,6 +13,7 @@ public class Camera {
     private String key;
     private STATUS status; // Camera status: Up, Down, or Error.
     private List<StampedDetectedObjects> detectedObjectsList; // List of detected objects with timestamps.
+    static List<Camera> cameras = new ArrayList<>();
 
     // Enum for status
 
@@ -21,6 +23,7 @@ public class Camera {
         this.frequency = frequency;
         this.status = status;
         this.detectedObjectsList = detectedObjectsList;
+        cameras.add(this);
     }
 
     // Getters
@@ -59,6 +62,10 @@ public class Camera {
 
     public void setDetectedObjectsList(List<StampedDetectedObjects> detectedObjectsList) {
         this.detectedObjectsList = detectedObjectsList;
+    }
+
+    public static List<Camera> getCameras() {
+        return cameras;
     }
 
     // other methods:

@@ -44,5 +44,6 @@ public class LiDarService extends MicroService {
 
         });
 
+        sendBroadcast(new createdBroadcast(this.getName()));
     }
 }

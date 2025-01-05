@@ -26,4 +26,8 @@ public class StampedDetectedObjects {
     public List<DetectedObject> getDetectedObjects() {
         return detectedObjects;
     }
+
+    public int getNumOfDetectedObjects() {
+        return detectedObjects.size();
+    }
 }

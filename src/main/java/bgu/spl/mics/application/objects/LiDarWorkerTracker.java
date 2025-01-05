@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.objects;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,6 +14,7 @@ public class LiDarWorkerTracker {
 	private int frequency; // The time interval at which the LiDar sends new events.
 	private STATUS status; // LiDar status: Up, Down, or Error.
 	private List<TrackedObject> lastTrackedObjects; // The last objects the LiDar tracked.
+	public static List<LiDarWorkerTracker> LiDarWorkerTrackers = new ArrayList<>();
 
 
 
@@ -22,6 +24,7 @@ public class LiDarWorkerTracker {
 		this.frequency = frequency;
 		this.status = status;
 		this.lastTrackedObjects = lastTrackedObjects;
+		LiDarWorkerTrackers.add(this);
 	}
 
 	// Getters

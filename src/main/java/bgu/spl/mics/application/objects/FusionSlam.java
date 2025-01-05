@@ -18,7 +18,14 @@ public class FusionSlam {
 
     List<LandMark> landmarksList;
     List<Pose> posesList;
-    Pose currentPose;
+
+
+    /**CONSTRUCTORS*/
+    public FusionSlam() {
+        this.landmarksList = new ArrayList<LandMark>();
+        this.posesList = new ArrayList<Pose>();
+    }
+
 
     /**
      * Retrieves the singleton instance of FusionSlam.
@@ -34,25 +41,12 @@ public class FusionSlam {
         return landmarksList;
     }
 
-    public void setLandmarksList(List<LandMark> landmarksList) {
-        this.landmarksList = landmarksList;
-    }
 
     public List<Pose> getPosesList() {
         return posesList;
     }
 
-    public void setPosesList(List<Pose> posesList) {
-        this.posesList = posesList;
-    }
 
-    public Pose getCurrentPose() {
-        return currentPose;
-    }
-
-    public void setCurrentPose(Pose currentPose) {
-        this.currentPose = currentPose;
-    }
 
     public int getPoseTime(){
         return posesList.size();

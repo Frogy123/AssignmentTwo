@@ -3,8 +3,15 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.*;
+import bgu.spl.mics.parser.Error_Output;
+import bgu.spl.mics.parser.Out;
+import bgu.spl.mics.parser.Output;
+import com.google.gson.Gson;
 import sun.management.Sensor;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +31,7 @@ public class FusionSlamService extends MicroService {
     List<String> sensors;
     List<TrackedObject> WaitingForPose ;
 
+    StatisticalFolder statisticalFolder;
 
     /**
      * Constructor for FusionSlamService.
@@ -36,6 +44,7 @@ public class FusionSlamService extends MicroService {
         currentTick = 0;
         sensors = new ArrayList<>();
         WaitingForPose = new ArrayList<>();
+        this.statisticalFolder = StatisticalFolder.getInstance();
 
     }
 
@@ -57,9 +66,7 @@ public class FusionSlamService extends MicroService {
         this.subscribeEvent(PoseEvent.class, (p) -> {
             while(p.getTime() != currentTick) wait();
                 Pose pose = p.getPose();
-                fusionSlam.setCurrentPose(pose);
                 fusionSlam.getPosesList().add(pose);
-
         });
 
         this.subscribeEvent(TrackedObjectsEvent.class, (TrackedObjectsEvent t)->{
@@ -73,6 +80,7 @@ public class FusionSlamService extends MicroService {
                         if(landMark == null){
                             LandMark newLandMark = new LandMark(tObj.getId(), tObj.getDescription(), coordinate);
                             fusionSlam.getLandmarksList().add(newLandMark);
+                            statisticalFolder.incrementNumLandmarks();
                         }else{
                             updateLandMark(landMark, coordinate);
                         }
@@ -89,19 +97,26 @@ public class FusionSlamService extends MicroService {
 
         this.subscribeBroadcast(TickBroadcast.class, (TickBroadcast t)->{
                 currentTick++;
+                statisticalFolder.incrementSystemRunTime();
         });
 
         this.subscribeBroadcast(TerminatedBroadcast.class, (TerminatedBroadcast t)->{
             if(!t.getSenderId().equals("TimeService")){
                 sensors.remove(t.getSenderId());
                 if(sensors.isEmpty()){
+                    Output output = new Output(fusionSlam);
+                    createOutputFile(output);
                     this.terminate();
                 }
             }
         });
 
         this.subscribeBroadcast(CrashedBroadcast.class, (CrashedBroadcast t)->{
+            Error_Output error_output = new Error_Output(t.getSenderId()); //need to fix
+            createOutputFile(error_output);
             this.terminate();
+
+
         });
 
     }
@@ -122,6 +137,41 @@ public class FusionSlamService extends MicroService {
 
             landMark.getCoordinates().set(i, CloudPoint.average(oldCoordinate, newCoordinate));
 
+        }
+    }
+
+
+
+    private void createOutputFile(Out out){
+
+        String fileName = out instanceof Error_Output ? "error_output.txt" : "output.txt";
+        out = out instanceof Error_Output ? (Error_Output) out : (Output) out;
+
+        try {
+            File file = new File(fileName);
+            if (file.createNewFile()) {
+                System.out.println("File created: " + file.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    private void writeOutput(File file, Out out){
+        try {
+            FileWriter myWriter = new FileWriter(file);
+            Gson gson = new Gson();
+            String json = gson.toJson(out);
+
+            myWriter.write(json);
+            myWriter.close();
+
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
         }
     }
 
