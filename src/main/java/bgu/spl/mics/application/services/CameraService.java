@@ -1,13 +1,8 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.Broadcast;
 import bgu.spl.mics.MicroService;
-import bgu.spl.mics.application.messages.CrashedBroadcast;
-import bgu.spl.mics.application.messages.DetectedObjectsEvent;
-import bgu.spl.mics.application.messages.TerminatedBroadcast;
-import bgu.spl.mics.application.messages.TickBroadcast;
+import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.Camera;
-import bgu.spl.mics.application.objects.DetectedObject;
 import bgu.spl.mics.application.objects.StampedDetectedObjects;
 
 /**
@@ -27,9 +22,10 @@ public class CameraService extends MicroService {
      * @param camera The Camera object that this service will use to detect objects.
      */
     public CameraService(Camera camera) {
-        super("CameraService" + cameraServiceCount++);
+        super(camera.getKey());
         this.camera = camera;
     }
+
 
     /**
      * Initializes the CameraService.
@@ -44,10 +40,14 @@ public class CameraService extends MicroService {
                 sendEvent(new DetectedObjectsEvent(objs));
             }
         });
-        this.subscribeBroadcast(TerminatedBroadcast.class,boradcast -> terminate());
+        this.subscribeBroadcast(TerminatedBroadcast.class, boradcast -> {
+            if(boradcast.getSenderId().equals("TimeService")){
+                sendBroadcast(new TerminatedBroadcast(this.getName()));
+                terminate();
+            }
+        });
         this.subscribeBroadcast(CrashedBroadcast.class,boradcast -> terminate());
-
-
+        sendBroadcast(new createdBroadcast(this.getName()));
     }
 
 }

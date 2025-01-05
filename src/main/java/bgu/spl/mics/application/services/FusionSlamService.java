@@ -3,7 +3,9 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.*;
+import sun.management.Sensor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,8 +19,10 @@ import java.util.List;
 public class FusionSlamService extends MicroService {
 
     FusionSlam fusionSlam;
-    int sensorsCount = 0;
     int currentTick = 0;
+
+    List<String> sensors;
+    List<TrackedObject> WaitingForPose ;
 
 
     /**
@@ -30,7 +34,11 @@ public class FusionSlamService extends MicroService {
         super("FusionSlamService");
         fusionSlam = _fusionSlam;
         currentTick = 0;
+        sensors = new ArrayList<>();
+        WaitingForPose = new ArrayList<>();
+
     }
+
 
 
     /**
@@ -40,45 +48,55 @@ public class FusionSlamService extends MicroService {
      */
     @Override
     protected void initialize() {
+
+        this.subscribeBroadcast(createdBroadcast.class, (createdBroadcast c)->{
+            sensors.add(c.getSenderId());
+        });
+
+
         this.subscribeEvent(PoseEvent.class, (p) -> {
             while(p.getTime() != currentTick) wait();
-            synchronized (this){
                 Pose pose = p.getPose();
                 fusionSlam.setCurrentPose(pose);
                 fusionSlam.getPosesList().add(pose);
-            }
 
         });
 
         this.subscribeEvent(TrackedObjectsEvent.class, (TrackedObjectsEvent t)->{
-            synchronized (this){
                 List<TrackedObject> trackedObjects = t.getTrackedObjects();
                 for (TrackedObject tObj : trackedObjects) {
-                    List<CloudPoint> coordinate = FusionSlam.tranformToGlobalCoordinate(tObj);
+                    if(FusionSlam.getInstance().getPoseTime() != tObj.getTime()){
+                        List<CloudPoint> coordinate = FusionSlam.tranformToGlobalCoordinate(tObj);
 
-                    LandMark landMark = getCorrectLandMark(tObj.getId());
+                        LandMark landMark = getCorrectLandMark(tObj.getId());
 
-                    if(landMark == null){
-                        LandMark newLandMark = new LandMark(tObj.getId(), tObj.getDescription(), coordinate);
-                        fusionSlam.getLandmarksList().add(newLandMark);
+                        if(landMark == null){
+                            LandMark newLandMark = new LandMark(tObj.getId(), tObj.getDescription(), coordinate);
+                            fusionSlam.getLandmarksList().add(newLandMark);
+                        }else{
+                            updateLandMark(landMark, coordinate);
+                        }
                     }else{
-                        updateLandMark(landMark, coordinate);
+                           WaitingForPose.add(tObj);
                     }
-                }
-            }
 
+                }
+                if(!WaitingForPose.isEmpty()){
+                    this.sendEvent(new TrackedObjectsEvent(WaitingForPose));
+                    WaitingForPose.clear();
+                }
         });
 
         this.subscribeBroadcast(TickBroadcast.class, (TickBroadcast t)->{
-            synchronized (this){
                 currentTick++;
-                this.notifyAll();
-            }
         });
 
         this.subscribeBroadcast(TerminatedBroadcast.class, (TerminatedBroadcast t)->{
-            if(t.getSenderName().equals("TimeService")){
-                this.terminate();
+            if(!t.getSenderId().equals("TimeService")){
+                sensors.remove(t.getSenderId());
+                if(sensors.isEmpty()){
+                    this.terminate();
+                }
             }
         });
 
@@ -88,7 +106,7 @@ public class FusionSlamService extends MicroService {
 
     }
 
-    private synchronized LandMark getCorrectLandMark(String objId){
+    private LandMark getCorrectLandMark(String objId){
         for (LandMark landMark : fusionSlam.getLandmarksList()) {
             if(landMark.getId().equals(objId)){
                 return landMark;
@@ -97,7 +115,7 @@ public class FusionSlamService extends MicroService {
         return null;
     }
 
-    private synchronized void updateLandMark(LandMark landMark, List<CloudPoint> coordinate){
+    private void updateLandMark(LandMark landMark, List<CloudPoint> coordinate){
         for(int i = 0; i < coordinate.size(); i++){
             CloudPoint newCoordinate = coordinate.get(i);
             CloudPoint oldCoordinate = landMark.getCoordinates().get(i);

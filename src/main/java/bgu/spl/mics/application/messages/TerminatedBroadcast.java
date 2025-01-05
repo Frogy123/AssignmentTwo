@@ -4,16 +4,16 @@ import bgu.spl.mics.Broadcast;
 
 public class TerminatedBroadcast implements Broadcast
 {
-    private String senderName;
+    private String id;
 
-    public TerminatedBroadcast(String senderName)
+    public TerminatedBroadcast(String id)
     {
-        this.senderName = senderName;
+        this.id = id;
     }
 
-    public String getSenderName()
+    public String getSenderId()
     {
-        return senderName;
+        return id;
     }
 
 

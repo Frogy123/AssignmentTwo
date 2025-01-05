@@ -20,7 +20,7 @@ public class PoseService extends MicroService {
     GPSIMU gpsimu;
 
     public PoseService(GPSIMU gpsimu) {
-        super("Change_This_Name");
+        super("PoseService");
         this.gpsimu = gpsimu;
     }
 

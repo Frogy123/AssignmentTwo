@@ -69,7 +69,10 @@ public class MessageBusImpl implements MessageBus {
 
 
 		// add type as a event subscribition of mine
-		rm.eventSubs.add(type);
+		synchronized (rm) {
+			rm.eventSubs.add(type);
+		}
+
 	}
 
 	@Override
@@ -103,8 +106,10 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
 		Queue<RegisteredMicroService> subs = eventSubsTable.get(e.getClass());
+
 		RegisteredMicroService chosenRm = subs.remove(); // remove the first rm in the Queue
-		chosenRm.myMessageQueue.add(e);
+//		chosenRm.myMessageQueue.add(e);
+
 		subs.add(chosenRm); // insert it as last
 
 		Future<T> fut = new Future<>();

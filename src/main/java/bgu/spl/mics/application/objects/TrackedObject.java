@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,32 +9,30 @@ import java.util.List;
  * time of tracking, and coordinates in the environment.
  */
 public class TrackedObject {
-    String id;
-    int time;
-    String description;
-    List<CloudPoint> coordinates;
-
-    public TrackedObject(String id, int time, String description, List<CloudPoint> coordinates){
+    private String id;
+    private int time;
+    private String description;
+    private List<CloudPoint> coordinates;
+    public TrackedObject(String id, String description) {
         this.id = id;
-        this.time = time;
         this.description = description;
-        this.coordinates = coordinates;
+        this.coordinates = new ArrayList<CloudPoint>();
+        this.time = 0;
     }
-
-    public String getId(){
+    public String getId() {
         return id;
     }
-
-    public int getTime(){
+    public int getTime() {
         return time;
     }
-
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
-
-    public List<CloudPoint> getCoordinates(){
+    public List<CloudPoint> getCoordinates() {
         return coordinates;
     }
-    // TODO: Define fields and methods.
+    public void addCoordinate(CloudPoint coordinate) {
+        coordinates.add(coordinate);
+    }
+
 }

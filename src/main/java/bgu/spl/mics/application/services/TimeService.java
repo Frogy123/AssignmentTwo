@@ -2,6 +2,7 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.CrashedBroadcast;
+import bgu.spl.mics.application.messages.TerminatedBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
 
 /**
@@ -35,7 +36,7 @@ public class TimeService extends MicroService {
         int currentTick = 0;
         while(currentTick < duration){
             try {
-                Thread.sleep(tickTime);
+                Thread.sleep(tickTime*1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 sendBroadcast(new CrashedBroadcast("TimeService"));
@@ -43,5 +44,8 @@ public class TimeService extends MicroService {
             sendBroadcast(new TickBroadcast(currentTick));
             currentTick++;
         };
+        sendBroadcast(new TerminatedBroadcast("TimeService"));
+
+        terminate();
     }
 }

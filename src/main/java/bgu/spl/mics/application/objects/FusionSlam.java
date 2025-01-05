@@ -54,6 +54,10 @@ public class FusionSlam {
         this.currentPose = currentPose;
     }
 
+    public int getPoseTime(){
+        return posesList.size();
+    }
+
     //static methods
     public static CloudPoint tranformToGlobalCoordinates(CloudPoint point, int time){
         Pose corespondingPose = FusionSlam.getInstance().getPosesList().get(time);

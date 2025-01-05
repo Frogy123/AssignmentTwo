@@ -14,6 +14,12 @@ public class CloudPoint {
         this.y = y;
     }
 
+    public static CloudPoint average(CloudPoint oldCoordinate, CloudPoint newCoordinate) {
+        double x = (oldCoordinate.getX() + newCoordinate.getX()) / 2;
+        double y = (oldCoordinate.getY() + newCoordinate.getY()) / 2;
+        return new CloudPoint(x, y);
+    }
+
     // Getters
     public double getX() {
         return x;
@@ -31,4 +37,6 @@ public class CloudPoint {
     public void setY(double y) {
         this.y = y;
     }
+
+
 }
