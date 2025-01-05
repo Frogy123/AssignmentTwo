@@ -63,6 +63,14 @@ public class Camera {
 
     // other methods:
 
+    /**
+     *
+     * @param time
+     * @return detected objects at a particular time
+     *
+     * @pre: none
+     * @post:
+     */
     public StampedDetectedObjects DetectObjects(int time){
         //TO-DO implement
         return null ;
