@@ -8,18 +8,16 @@ public class Error_Output implements Out {
 
     String Error;
     List<String> faultySensor;
-    List<StampedDetectedObjects> detectedObjects;
+
+    List<CameraOut> LastFrame;
     //Lidar
     List<Pose> poses;
     StatisticalFolder statisticalFolder;
 
     public Error_Output(FusionSlam fs){
-        for(Camera c: Camera.getCameras()){
-            if(c.getFaulty()){
-                faultySensor.add(c.getSensorName());
-            }
-        }
-
+        this.statisticalFolder = StatisticalFolder.getInstance();
+        this.LastFrame = Camera.getCameras();
+        this.poses = fs.getPosesList();
     }
 
 

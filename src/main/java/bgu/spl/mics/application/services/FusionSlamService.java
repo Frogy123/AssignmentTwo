@@ -112,7 +112,7 @@ public class FusionSlamService extends MicroService {
         });
 
         this.subscribeBroadcast(CrashedBroadcast.class, (CrashedBroadcast t)->{
-            Error_Output error_output = new Error_Output(t.getSenderId()); //need to fix
+            Error_Output error_output = new Error_Output(t.getSenderName(), this); //need to fix
             createOutputFile(error_output);
             this.terminate();
 

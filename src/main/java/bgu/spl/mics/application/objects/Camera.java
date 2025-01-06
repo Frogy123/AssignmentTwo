@@ -1,4 +1,8 @@
 package bgu.spl.mics.application.objects;
+import bgu.spl.mics.parser.CameraOut;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +17,7 @@ public class Camera {
     private String key;
     private STATUS status; // Camera status: Up, Down, or Error.
     private List<StampedDetectedObjects> detectedObjectsList; // List of detected objects with timestamps.
-    static List<Camera> cameras = new ArrayList<>();
+    static List<CameraOut> cameras = new ArrayList<>();
 
     // Enum for status
 
@@ -23,7 +27,7 @@ public class Camera {
         this.frequency = frequency;
         this.status = status;
         this.detectedObjectsList = detectedObjectsList;
-        cameras.add(this);
+        cameras.add(new CameraOut(this));
     }
 
     // Getters
@@ -64,7 +68,7 @@ public class Camera {
         this.detectedObjectsList = detectedObjectsList;
     }
 
-    public static List<Camera> getCameras() {
+    public static List<CameraOut> getCameras() {
         return cameras;
     }
 
@@ -86,5 +90,7 @@ public class Camera {
         }
         return null;
     }
+
+
 
 }
