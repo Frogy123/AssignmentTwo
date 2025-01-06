@@ -61,7 +61,7 @@ public class GurionRockRunner {
         //intalianize the CameraService
         cameraParser cameraParser = config.getCameraParser();
         List<Camera> cameras = cameraParser.getCameraList();
-        String camerasDataPath = cameraParser.getCameraDataPath();
+        String camerasDataPath =     cameraParser.getCameraDataPath();
         for (Camera camera : cameras) {
             CameraService cameraService = new CameraService(camera);
             cameraService.run();
