@@ -79,10 +79,11 @@ public class Camera {
      * @param time
      * @return detected objects at a particular time
      *
-     * @pre: none
-     * @post:
+     * @pre none
+     * @post If there is a StampedDetectedObjects object in detectedObjectsList
+     *       with Detected, that object is returned. Otherwise, null is returned.
      */
-    public StampedDetectedObjects DetectObjects(int time){
+    public StampedDetectedObjects detectObjects(int time){
         for(StampedDetectedObjects objs: detectedObjectsList){
             if (objs.getTime()==time)
                 return objs;
