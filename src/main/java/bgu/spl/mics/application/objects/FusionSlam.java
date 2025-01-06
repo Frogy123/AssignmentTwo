@@ -68,7 +68,7 @@ public class FusionSlam {
         float xGlobal = (float) (point.getX() * cosYaw - point.getY() * sinYaw + corespondingPose.getX());
         float yGlobal = (float) (point.getX() * sinYaw + point.getY() * cosYaw + corespondingPose.getY());
 
-        return new CloudPoint(xGlobal, yGlobal);
+        return new CloudPoint(xGlobal, yGlobal) ;
 
     }
 

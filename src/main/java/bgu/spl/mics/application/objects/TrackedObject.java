@@ -19,6 +19,11 @@ public class TrackedObject {
         this.coordinates = new ArrayList<CloudPoint>();
         this.time = 0;
     }
+    public TrackedObject(List<CloudPoint> coordinates, int t) {
+        this.coordinates = coordinates;
+        this.time = t;
+    }
+
     public String getId() {
         return id;
     }
