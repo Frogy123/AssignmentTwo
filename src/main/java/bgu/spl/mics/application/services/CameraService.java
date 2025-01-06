@@ -2,10 +2,7 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
-import bgu.spl.mics.application.objects.Camera;
-import bgu.spl.mics.application.objects.DetectedObject;
-import bgu.spl.mics.application.objects.StampedDetectedObjects;
-import bgu.spl.mics.application.objects.StatisticalFolder;
+import bgu.spl.mics.application.objects.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,19 +43,27 @@ public class CameraService extends MicroService {
     @Override
     protected void initialize() {
         this.subscribeBroadcast(TickBroadcast.class,(TickBroadcast t) -> {
-            StampedDetectedObjects objs = camera.detectObjects(t.getTick());
-            if(objs != null){
-                detectedObjectsToSend.add(objs);
-                statisticalFolder.incrementNumDetectedObjects(objs.getNumOfDetectedObjects());
-            }
+            if(camera.getStatus() == STATUS.UP) {
 
-            if(t.getTick() % camera.getFrequency() == 0){
-               for(StampedDetectedObjects stampedDetectedObjects : detectedObjectsToSend){
-                   sendEvent(new DetectedObjectsEvent(stampedDetectedObjects));
-               }
-               detectedObjectsToSend.clear();
-            }
+                StampedDetectedObjects objs = camera.detectObjects(t.getTick());
+                if (objs != null) {
+                    //check if there is an error:
+                    for(DetectedObject object: objs.getDetectedObjects()){
+                        if(object.getId() == "ERROR")
+                            camera.setStatus(STATUS.ERROR);
+                        sendBroadcast(new CrashedBroadcast());
+                    }
+                    detectedObjectsToSend.add(objs);
+                    statisticalFolder.incrementNumDetectedObjects(objs.getNumOfDetectedObjects());
+                }
 
+                if (t.getTick() % camera.getFrequency() == 0) {
+                    for (StampedDetectedObjects stampedDetectedObjects : detectedObjectsToSend) {
+                        sendEvent(new DetectedObjectsEvent(stampedDetectedObjects));
+                    }
+                    detectedObjectsToSend.clear();
+                }
+            }
         });
         this.subscribeBroadcast(TerminatedBroadcast.class, boradcast -> {
             if(boradcast.getSenderId().equals("TimeService")){

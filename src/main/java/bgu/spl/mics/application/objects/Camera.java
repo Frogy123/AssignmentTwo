@@ -47,6 +47,7 @@ public class Camera {
         return status;
     }
 
+
     public List<StampedDetectedObjects> getDetectedObjectsList() {
         return detectedObjectsList;
     }
