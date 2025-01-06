@@ -11,6 +11,5 @@ public class CameraTest {
     @AfterEach
     public void tearDown()
     {
-
     }
 }

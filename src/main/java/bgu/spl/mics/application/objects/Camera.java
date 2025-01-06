@@ -79,8 +79,11 @@ public class Camera {
      * @post:
      */
     public StampedDetectedObjects DetectObjects(int time){
-        //TO-DO implement
-        return null ;
+        for(StampedDetectedObjects objs: detectedObjectsList){
+            if (objs.getTime()==time)
+                return objs;
+        }
+        return null;
     }
 
 }
