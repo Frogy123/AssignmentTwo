@@ -7,7 +7,6 @@ import bgu.spl.mics.parser.Error_Output;
 import bgu.spl.mics.parser.Out;
 import bgu.spl.mics.parser.Output;
 import com.google.gson.Gson;
-import sun.management.Sensor;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -112,7 +111,9 @@ public class FusionSlamService extends MicroService {
         });
 
         this.subscribeBroadcast(CrashedBroadcast.class, (CrashedBroadcast t)->{
-            Error_Output error_output = new Error_Output(t.getSenderName(), this); //need to fix
+            String ErrorMsg = t.getErrorMassage();
+            String FaultySensor = t.getSenderName();
+            Error_Output error_output = new Error_Output(ErrorMsg, FaultySensor, fusionSlam); //need to fix
             createOutputFile(error_output);
             this.terminate();
 

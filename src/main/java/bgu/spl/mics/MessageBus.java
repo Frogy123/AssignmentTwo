@@ -1,6 +1,5 @@
 package bgu.spl.mics;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 /**
  * The message-bus is a shared object used for communication between

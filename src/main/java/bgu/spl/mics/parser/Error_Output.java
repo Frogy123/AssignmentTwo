@@ -7,17 +7,19 @@ import java.util.List;
 public class Error_Output implements Out {
 
     String Error;
-    List<String> faultySensor;
+    String faultySensor;
 
     List<CameraOut> LastFrame;
     //Lidar
     List<Pose> poses;
     StatisticalFolder statisticalFolder;
 
-    public Error_Output(FusionSlam fs){
+    public Error_Output(String _Error, String _faultySensor, FusionSlam fs){
         this.statisticalFolder = StatisticalFolder.getInstance();
         this.LastFrame = Camera.getCameras();
         this.poses = fs.getPosesList();
+        this.Error = _Error;
+        this.faultySensor = _faultySensor;
     }
 
 
