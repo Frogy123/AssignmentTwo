@@ -46,7 +46,7 @@ public class CameraService extends MicroService {
     @Override
     protected void initialize() {
         this.subscribeBroadcast(TickBroadcast.class,(TickBroadcast t) -> {
-            StampedDetectedObjects objs = camera.DetectObjects(t.getTick());
+            StampedDetectedObjects objs = camera.detectObjects(t.getTick());
             if(objs != null){
                 detectedObjectsToSend.add(objs);
                 statisticalFolder.incrementNumDetectedObjects(objs.getNumOfDetectedObjects());
