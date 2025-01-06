@@ -49,9 +49,10 @@ public class CameraService extends MicroService {
                 if (objs != null) {
                     //check if there is an error:
                     for(DetectedObject object: objs.getDetectedObjects()){
-                        if(object.getId() == "ERROR")
+                        if(object.getId() == "ERROR") {
                             camera.setStatus(STATUS.ERROR);
-                        sendBroadcast(new CrashedBroadcast());
+                            sendBroadcast(new CrashedBroadcast(camera.getKey(), object.getDescription()));
+                        }
                     }
                     detectedObjectsToSend.add(objs);
                     statisticalFolder.incrementNumDetectedObjects(objs.getNumOfDetectedObjects());

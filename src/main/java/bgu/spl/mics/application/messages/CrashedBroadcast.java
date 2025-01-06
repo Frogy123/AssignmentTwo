@@ -5,8 +5,10 @@ import bgu.spl.mics.Broadcast;
 public class CrashedBroadcast implements Broadcast {
 
     private String senderName;
+    private String errorMassage;
 
-    public CrashedBroadcast(String senderName) {
+    public CrashedBroadcast(String senderName, String _errorMassage) {
+        this.errorMassage = _errorMassage;
         this.senderName = senderName;
     }
 
@@ -14,4 +16,7 @@ public class CrashedBroadcast implements Broadcast {
         return senderName;
     }
 
+    public String getErrorMassage() {
+        return errorMassage;
+    }
 }
