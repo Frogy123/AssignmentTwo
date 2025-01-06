@@ -20,6 +20,7 @@ public class CameraService extends MicroService {
     private Camera camera;
     StatisticalFolder statisticalFolder;
     List<StampedDetectedObjects> detectedObjectsToSend;
+    StampedDetectedObjects lastFrame;
     /**
      * Constructor for CameraService.
      *
@@ -32,6 +33,10 @@ public class CameraService extends MicroService {
         this.camera = camera;
         statisticalFolder = StatisticalFolder.getInstance();
         detectedObjectsToSend = new ArrayList<StampedDetectedObjects>();
+    }
+
+    public void writeLastFrame(){
+        //TODO: write down the last frame to the error file
     }
 
 
@@ -52,9 +57,15 @@ public class CameraService extends MicroService {
                         if(object.getId() == "ERROR") {
                             camera.setStatus(STATUS.ERROR);
                             sendBroadcast(new CrashedBroadcast(camera.getKey(), object.getDescription()));
+                            writeLastFrame();
+                            terminate();
+                            return;
                         }
                     }
+
+                    //if there is no error:
                     detectedObjectsToSend.add(objs);
+                    lastFrame = objs;
                     statisticalFolder.incrementNumDetectedObjects(objs.getNumOfDetectedObjects());
                 }
 
@@ -72,7 +83,10 @@ public class CameraService extends MicroService {
                 terminate();
             }
         });
-        this.subscribeBroadcast(CrashedBroadcast.class,boradcast -> terminate());
+        this.subscribeBroadcast(CrashedBroadcast.class,boradcast -> {
+            writeLastFrame();
+            terminate();
+        });
         sendBroadcast(new createdBroadcast(this.getName()));
     }
 
