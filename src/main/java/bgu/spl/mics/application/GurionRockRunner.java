@@ -5,9 +5,7 @@ import bgu.spl.mics.application.services.*;
 import bgu.spl.mics.parser.Config;
 import bgu.spl.mics.parser.CameraParser;
 import bgu.spl.mics.parser.LidarParser;
-import com.google.gson.Gson;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,7 +20,6 @@ import java.util.concurrent.Executors;
 public class GurionRockRunner {
 
 
-    int i;
 
     /**
      * The main method of the simulation.
@@ -37,7 +34,12 @@ public class GurionRockRunner {
         String configPath = args[0];
 
         // Initialize the Config
-        Config config = Config.parseConfig(configPath);
+        Config config;
+
+        config = Config.parseConfig(configPath);
+        if (config == null) {
+            throw new IllegalArgumentException("Config could not be parsed or is null.");
+        }
 
 
 
@@ -60,7 +62,12 @@ public class GurionRockRunner {
             executorService.submit(fusionSlamService);
 
             // Initialize the CameraService
-            CameraParser cameraParser = config.getCameraParser();
+
+            CameraParser cameraParser;
+
+            cameraParser = config.getCameraParser();
+            System.err.println("Config is not initialized!");
+
             List<Camera> cameras = cameraParser.getCameraList();
             String camerasDataPath = cameraParser.getCameraDataPath();
 

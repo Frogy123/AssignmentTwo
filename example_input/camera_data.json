@@ -10,7 +10,7 @@
             "time": 4,
             "detectedObjects": [
                 {"id": "Wall_3", "description": "Wall"},
-                {"id": "Chair_Base_1", "description": "Chair Base"}
+                {"id": "Chair_Base_1", "adescription": "Chair Base"}
             ]
         },
         {
