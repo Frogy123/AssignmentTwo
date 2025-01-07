@@ -1,18 +1,18 @@
 {
-  "Cameras": {
-    "CamerasConfigurations":[
-      {
-        "id": 1,
-        "frequency": 1,
-        "camera_key": "camera1"
-      },{
-        "id": 1,
-        "frequency": 2,
-        "camera_key": "camera2"
-      }
-    ],
-    "camera_datas_path": "./camera_data.json"
-  },
+    "Cameras": {
+      "CamerasConfigurations":[
+        {
+          "id": 1,
+          "frequency": 1,
+          "camera_key": "camera1"
+        },{
+          "id": 1,
+          "frequency": 2,
+          "camera_key": "camera2"
+        }
+      ],
+      "camera_datas_path": "./camera_data.json"
+    },
   "Lidars": {
     "LidarConfigurations":[{
       "id": 1,

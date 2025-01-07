@@ -7,12 +7,12 @@ import java.util.List;
 
 public class CameraParser {
     @SerializedName("CamerasConfigurations")
-    List<Camera> cameraList;
+    List<Camera> CamerasConfigurations;
     @SerializedName("camera_datas_path")
     String cameraDataPath;
 
     public List<Camera> getCameraList() {
-        return cameraList;
+        return CamerasConfigurations;
     }
 
     public String getCameraDataPath() {

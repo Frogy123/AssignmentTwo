@@ -64,9 +64,7 @@ public class GurionRockRunner {
             // Initialize the CameraService
 
             CameraParser cameraParser;
-
             cameraParser = config.getCameraParser();
-            System.err.println("Config is not initialized!");
 
             List<Camera> cameras = cameraParser.getCameraList();
             String camerasDataPath = cameraParser.getCameraDataPath();

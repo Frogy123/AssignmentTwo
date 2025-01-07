@@ -7,15 +7,15 @@ import java.util.List;
 
 public class LidarParser {
     @SerializedName("LidarConfigurations")
-    List<LiDarWorkerTracker> LiDarWorkerTrackers;
+    List<LiDarWorkerTracker> LidarConfigurations;
     @SerializedName("lidars_data_path")
-    String lidarDataPath;
+    String lidars_data_path;
 
     public List<LiDarWorkerTracker> getLiDarWorkerTrackers() {
-        return LiDarWorkerTrackers;
+        return LidarConfigurations;
     }
 
     public String getLidarDataPath() {
-        return lidarDataPath;
+        return lidars_data_path;
     }
 }

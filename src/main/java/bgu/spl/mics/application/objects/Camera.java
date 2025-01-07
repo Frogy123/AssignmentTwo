@@ -14,6 +14,7 @@ import java.util.List;
 public class Camera {
     private int id; // The ID of the camera.
     private int frequency; // The time interval at which the camera sends new events.
+    private String camera_key;
     private STATUS status; // Camera status: Up, Down, or Error.
     private List<StampedDetectedObjects> detectedObjectsList; // List of detected objects with timestamps.
 

@@ -10,7 +10,7 @@ public class Config {
     @SerializedName("Cameras")
     CameraParser cameraParser;
 
-    @SerializedName("LidarWorkers")
+    @SerializedName("Lidars")
     LidarParser lidarParser;
 
     @SerializedName("poseJsonFile")
