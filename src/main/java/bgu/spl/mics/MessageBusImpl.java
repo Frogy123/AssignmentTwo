@@ -48,7 +48,7 @@ public class MessageBusImpl implements MessageBus {
 		RegisteredMicroService rm = regTable.get(m);
 
 		// add rm to the group of registered microservices subscribed to events of type
-		eventSubsTable.putIfAbsent(type, new LinkedList<>());
+		eventSubsTable.putIfAbsent(type, new ConcurrentLinkedQueue<>());
 		Queue<RegisteredMicroService> q = eventSubsTable.get(type);
 		q.add(rm);
 
@@ -64,19 +64,12 @@ public class MessageBusImpl implements MessageBus {
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
 		System.out.println("DEBUG: " + m.getName() + " subscribing to Broadcast " + type.getSimpleName());
 		RegisteredMicroService rm = regTable.get(m);
-		System.out.println("DEBUG: " + m.getName() + "line 1 done" + type.getSimpleName());
-
 		// add rm to the group of registered microservices subscribed to broadcast of type
 		broadcastSubsTable.putIfAbsent(type, new ConcurrentLinkedQueue<>());
-
-		System.out.println("DEBUG: " + m.getName() + "line 2 done" + type.getSimpleName());
 		Queue<RegisteredMicroService> lst = broadcastSubsTable.get(type);
-		System.out.println("DEBUG: " + m.getName() + "line 3 done" + type.getSimpleName() + lst);
 		lst.add(rm);
-		System.out.println("DEBUG: " + m.getName() + "line 4 done" + type.getSimpleName());
 		// add type as a broadcast subscription of mine
 		rm.broadcastSubs.add(type);
-
 		System.out.println("DEBUG: " + m.getName() + " subscribed to Broadcast " + type.getSimpleName());
 	}
 
@@ -141,7 +134,6 @@ public class MessageBusImpl implements MessageBus {
 
 	// Queries for testing:
 	public Boolean isRegistered(MicroService m) {
-		System.out.println("DEBUG: Checking if MicroService " + m.getName() + " is registered.");
 		return regTable.containsKey(m);
 	}
 

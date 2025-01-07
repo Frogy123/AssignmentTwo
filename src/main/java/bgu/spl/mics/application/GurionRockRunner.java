@@ -39,28 +39,21 @@ public class GurionRockRunner {
     public static void main(String[] args) {
         System.out.println("Hello World!");
 
+        //parse system config
         String configPath = args[0];
         SystemConfiguration systemConfiguration = SystemConfigurationParser.parse(configPath);
 
+        //parse camera data
         String cameraDataRelPath = systemConfiguration.getCameras().getCamera_datas_path();
-        //
-//        List<Camera> cameras;
-//        Camera camera = new Camera();
-//        camera.parse(cameraDataRelPath);
-//        cameras.add(camera);
-         //
         String cameraDataAbsPath = PathResolver.resolveRelativePath(cameraDataRelPath,configPath);
         Map<String, List<StampedDetectedObjects>> cameraData = CameraDataParser.parse(cameraDataAbsPath);
 
+        //merge cameras config with camera data
         List<Camera> cameras = CameraMerger.merge(systemConfiguration.getCameras().getCamerasConfigurations(), cameraData);
-        for (Camera camera: cameras){
-            System.out.println("id: " + camera.getId());
-            System.out.println("num of detected objects: " + camera.getDetectedObjectsList().size());
-            for (StampedDetectedObjects stampedDetectedObjects: camera.getDetectedObjectsList()){
-                System.out.println("time: " + stampedDetectedObjects.getTime());
-            }
 
-        }
+
+
+
 
 
 
@@ -94,15 +87,15 @@ public class GurionRockRunner {
             }
 
             // Initialize the LidarWorker
-            /** LidarParser lidarParser = configParser.getLidarParser();
-            List<LiDarWorkerTracker> lidarWorkersList = lidarParser.getLiDarWorkerTrackers();
-            LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(lidarParser.getLidarDataPath());
+
+            List<LiDarWorkerTracker> lidarWorkersList =systemConfiguration.getLidarWorkers().getLidarConfigurations();
+            LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(systemConfiguration.getLidarWorkers().getLidars_data_path());
 
             for (LiDarWorkerTracker lidarWorker : lidarWorkersList) {
                 LiDarService lidarService = new LiDarService(lidarWorker);
                 executorService.submit(lidarService);
             }
-            */
+
             // Initialize the PoseService
             GPSIMU gpsimu = GPSIMU.getInstance();
             PoseService poseService = new PoseService(gpsimu);

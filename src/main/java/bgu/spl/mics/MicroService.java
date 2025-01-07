@@ -160,8 +160,8 @@ public abstract class MicroService implements Runnable {
     @Override
     public final void run() {
         System.out.println("DEBUG:" + getName() + " Running");
-        initialize();
         messageBus.register(this);
+        initialize();
         while (!terminated) {
             synchronized (this) {
                 try {
