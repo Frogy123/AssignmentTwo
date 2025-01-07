@@ -1,4 +1,4 @@
-package bgu.spl.mics.parser;
+package bgu.spl.mics.parsing;
 
 import bgu.spl.mics.application.objects.FusionSlam;
 import bgu.spl.mics.application.objects.LandMark;

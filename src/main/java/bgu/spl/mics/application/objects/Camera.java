@@ -1,9 +1,5 @@
 package bgu.spl.mics.application.objects;
-import bgu.spl.mics.parser.CameraOut;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +23,7 @@ public class Camera {
         this.status = status;
         this.detectedObjectsList = detectedObjectsList;
     }
+
 
     // Getters
     public int getId() {
@@ -88,5 +85,7 @@ public class Camera {
     }
 
 
-
+    public String getCameraKey() {
+        return camera_key;
+    }
 }

@@ -1,10 +1,7 @@
-package bgu.spl.mics.parser;
+package bgu.spl.mics.parsing;
 
 import bgu.spl.mics.application.objects.Camera;
 import bgu.spl.mics.application.objects.StampedDetectedObjects;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 public class CameraOut {
     String Name;

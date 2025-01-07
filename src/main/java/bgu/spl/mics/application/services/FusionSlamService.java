@@ -3,9 +3,9 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.*;
-import bgu.spl.mics.parser.Error_Output;
-import bgu.spl.mics.parser.Out;
-import bgu.spl.mics.parser.Output;
+import bgu.spl.mics.parsing.Error_Output;
+import bgu.spl.mics.parsing.Out;
+import bgu.spl.mics.parsing.Output;
 import com.google.gson.Gson;
 
 import java.io.File;
