@@ -47,6 +47,7 @@ public class CameraService extends MicroService {
      */
     @Override
     protected void initialize() {
+        System.out.println("DEBUG: initializing CameraService" + camera.getId());
         this.subscribeBroadcast(TickBroadcast.class,(TickBroadcast t) -> {
             if(camera.getStatus() == STATUS.UP) {
 
@@ -88,6 +89,9 @@ public class CameraService extends MicroService {
             terminate();
         });
         sendBroadcast(new createdBroadcast(this.getName()));
+
+        System.out.println("DEBUG: Finished initializing CameraService" + camera.getId());
+
     }
 
 }

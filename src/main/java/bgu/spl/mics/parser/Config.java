@@ -1,30 +1,36 @@
 package bgu.spl.mics.parser;
 
-import bgu.spl.mics.application.objects.Camera;
-import bgu.spl.mics.application.objects.LiDarWorkerTracker;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 public class Config {
-    @SerializedName("cameras")
-    cameraParser cameraParser;
+    @SerializedName("Cameras")
+    CameraParser cameraParser;
+
     @SerializedName("LidarWorkers")
-    lidarParser lidarParser;
+    LidarParser lidarParser;
+
+    @SerializedName("poseJsonFile")
     String poseJsonFile;
+
+    @SerializedName("TickTime")
     int TickTime;
+
+    @SerializedName("Duration")
     int Duration;
 
     //parser
+    // Parse configuration file
     public static Config parseConfig(String filePath) {
         Gson gson = new Gson();
         try (FileReader reader = new FileReader(filePath)) {
             Config config = gson.fromJson(reader, Config.class);
             return config;
         } catch (IOException e) {
+            System.err.println("Error reading configuration file: " + filePath);
             e.printStackTrace();
             return null;
         }
@@ -45,11 +51,11 @@ public class Config {
         return Duration;
     }
 
-    public cameraParser getCameraParser() {
+    public CameraParser getCameraParser() {
         return cameraParser;
     }
 
-    public lidarParser getLidarParser() {
+    public LidarParser getLidarParser() {
         return lidarParser;
     }
 

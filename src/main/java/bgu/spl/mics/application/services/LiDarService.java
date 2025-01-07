@@ -31,6 +31,8 @@ public class LiDarService extends MicroService {
      */
     @Override
     protected void initialize() {
+        System.out.println("DEBUG: initializing LiDarService" + lidarTracker.getId());
+
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast t) -> {
 
         });
@@ -45,5 +47,8 @@ public class LiDarService extends MicroService {
         });
 
         sendBroadcast(new createdBroadcast(this.getName()));
+
+        System.out.println("DEBUG: finished initializing LiDarService" + lidarTracker.getId());
+
     }
 }

@@ -30,10 +30,15 @@ public class PoseService extends MicroService {
      */
     @Override
     protected void initialize() {
+        System.out.println("DEBUG: initializing PoseService");
+
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast t) -> {
             gpsimu.tick();
             PoseEvent poseEvent = new PoseEvent(gpsimu.getCurrentPose(), gpsimu.getTick());
             sendEvent(poseEvent);
         });
+
+        System.out.println("DEBUG: finished initializing PoseService");
+
     }
 }

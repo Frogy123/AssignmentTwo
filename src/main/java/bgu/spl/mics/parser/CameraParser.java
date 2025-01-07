@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class cameraParser {
+public class CameraParser {
     @SerializedName("CamerasConfigurations")
     List<Camera> cameraList;
     @SerializedName("camera_datas_path")

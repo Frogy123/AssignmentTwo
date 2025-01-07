@@ -56,7 +56,7 @@ public class FusionSlamService extends MicroService {
      */
     @Override
     protected void initialize() {
-
+        System.out.println("DEBUG: initializing FusionSlamService");
         this.subscribeBroadcast(createdBroadcast.class, (createdBroadcast c)->{
             sensors.add(c.getSenderId());
         });
@@ -119,6 +119,8 @@ public class FusionSlamService extends MicroService {
 
 
         });
+
+        System.out.println("DEBUG: finished initializing FusionSlamService");
 
     }
 

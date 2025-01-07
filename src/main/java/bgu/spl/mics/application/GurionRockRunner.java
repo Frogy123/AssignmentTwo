@@ -3,13 +3,14 @@ package bgu.spl.mics.application;
 import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.application.services.*;
 import bgu.spl.mics.parser.Config;
-import bgu.spl.mics.parser.cameraParser;
-import bgu.spl.mics.parser.lidarParser;
+import bgu.spl.mics.parser.CameraParser;
+import bgu.spl.mics.parser.LidarParser;
 import com.google.gson.Gson;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * The main entry point for the GurionRock Pro Max Ultra Over 9000 simulation.
@@ -35,7 +36,8 @@ public class GurionRockRunner {
 
         String configPath = args[0];
 
-        Gson gson = new Gson();
+        // Initialize the Config
+        Config config = Config.parseConfig(configPath);
 
 
 
@@ -47,52 +49,48 @@ public class GurionRockRunner {
 
         // TODO: Start the simulation.
 
-        //intalianize the FusionSlamService
-        FusionSlam fusionSlam = FusionSlam.getInstance();
-        FusionSlamService fusionSlamService = new FusionSlamService(fusionSlam);
-        fusionSlamService.run();
+        // Initialize a thread pool
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
 
 
-        //intalianize the Config
-        Config config = Config.parseConfig(configPath);
+        try {
+            // Initialize the FusionSlamService
+            FusionSlam fusionSlam = FusionSlam.getInstance();
+            FusionSlamService fusionSlamService = new FusionSlamService(fusionSlam);
+            executorService.submit(fusionSlamService);
 
+            // Initialize the CameraService
+            CameraParser cameraParser = config.getCameraParser();
+            List<Camera> cameras = cameraParser.getCameraList();
+            String camerasDataPath = cameraParser.getCameraDataPath();
 
+            for (Camera camera : cameras) {
+                CameraService cameraService = new CameraService(camera);
+                executorService.submit(cameraService);
+            }
 
-        //intalianize the CameraService
-        cameraParser cameraParser = config.getCameraParser();
-        List<Camera> cameras = cameraParser.getCameraList();
-        String camerasDataPath =     cameraParser.getCameraDataPath();
-        for (Camera camera : cameras) {
-            CameraService cameraService = new CameraService(camera);
-            cameraService.run();
+            // Initialize the LidarWorker
+            LidarParser lidarParser = config.getLidarParser();
+            List<LiDarWorkerTracker> lidarWorkersList = lidarParser.getLiDarWorkerTrackers();
+            LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(lidarParser.getLidarDataPath());
+
+            for (LiDarWorkerTracker lidarWorker : lidarWorkersList) {
+                LiDarService lidarService = new LiDarService(lidarWorker);
+                executorService.submit(lidarService);
+            }
+
+            // Initialize the PoseService
+            GPSIMU gpsimu = GPSIMU.getInstance();
+            PoseService poseService = new PoseService(gpsimu);
+            executorService.submit(poseService);
+
+            // Initialize the TimeService
+            TimeService timeService = new TimeService(config.getTickTime(), config.getDuration());
+            executorService.submit(timeService);
+        } finally {
+            // Shutdown the executor service
+            executorService.shutdown();
         }
-
-        //intalianize the LidarWorker
-        lidarParser lidarParser = config.getLidarParser();
-        List<LiDarWorkerTracker>  lidarWorkersList = lidarParser.getLiDarWorkerTrackers();
-        LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(lidarParser.getLidarDataPath());
-
-        for (LiDarWorkerTracker lidarWorker : lidarWorkersList) {
-            LiDarService lidarService = new LiDarService(lidarWorker);
-            lidarService.run();
-        }
-
-        //intaliazing poseService
-        GPSIMU gpsimu = GPSIMU.getInstance();
-        PoseService poseService = new PoseService(gpsimu);
-        poseService.run();
-
-        //intalianize the TimeService
-        TimeService timeService = new TimeService(config.getTickTime(), config.getDuration());
-        timeService.run();
-
-
-
-
-
-
-
-
 
 
 

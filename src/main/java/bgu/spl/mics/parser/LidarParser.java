@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class lidarParser {
+public class LidarParser {
     @SerializedName("LidarConfigurations")
     List<LiDarWorkerTracker> LiDarWorkerTrackers;
     @SerializedName("lidars_data_path")

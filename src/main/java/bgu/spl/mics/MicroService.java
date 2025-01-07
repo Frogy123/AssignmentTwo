@@ -159,6 +159,7 @@ public abstract class MicroService implements Runnable {
      */
     @Override
     public final void run() {
+        System.out.println("DEBUG:" + getName() + " Running");
         initialize();
         messageBus.register(this);
         while (!terminated) {
@@ -177,6 +178,8 @@ public abstract class MicroService implements Runnable {
                 }
             }
         }
+
+        System.out.println("DEBUG:" + getName() + " Finished running");
         messageBus.unregister(this);
     }
 
