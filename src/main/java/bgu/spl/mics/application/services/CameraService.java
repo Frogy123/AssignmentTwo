@@ -10,14 +10,11 @@ import java.util.List;
 /**
  * CameraService is responsible for processing data from the camera and
  * sending DetectObjectsEvents to LiDAR workers.
- *
  * This service interacts with the Camera object to detect objects and updates
  * the system's StatisticalFolder upon sending its observations.
  */
 public class CameraService extends MicroService {
-    private static int cameraServiceCount = 0;
-
-    private Camera camera;
+    private final Camera camera;
     StatisticalFolder statisticalFolder;
     List<StampedDetectedObjects> detectedObjectsToSend;
     StampedDetectedObjects lastFrame;
@@ -32,7 +29,7 @@ public class CameraService extends MicroService {
         super(camera.getKey());
         this.camera = camera;
         statisticalFolder = StatisticalFolder.getInstance();
-        detectedObjectsToSend = new ArrayList<StampedDetectedObjects>();
+        detectedObjectsToSend = new ArrayList<>();
     }
 
     public void writeLastFrame(){
@@ -55,7 +52,7 @@ public class CameraService extends MicroService {
                 if (objs != null) {
                     //check if there is an error:
                     for(DetectedObject object: objs.getDetectedObjects()){
-                        if(object.getId() == "ERROR") {
+                        if(object.getId().equals("ERROR")) {
                             camera.setStatus(STATUS.ERROR);
                             sendBroadcast(new CrashedBroadcast(camera.getKey(), object.getDescription()));
                             writeLastFrame();
@@ -72,7 +69,7 @@ public class CameraService extends MicroService {
 
                 if (t.getTick() % camera.getFrequency() == 0) {
                     for (StampedDetectedObjects stampedDetectedObjects : detectedObjectsToSend) {
-                        sendEvent(new DetectedObjectsEvent(stampedDetectedObjects));
+                        sendEvent( new DetectedObjectsEvent(stampedDetectedObjects));
                     }
                     detectedObjectsToSend.clear();
                 }

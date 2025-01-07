@@ -10,15 +10,12 @@ import bgu.spl.mics.application.objects.GPSIMU;
  * and broadcasting PoseEvents at every tick.
  */
 public class PoseService extends MicroService {
-
+    GPSIMU gpsimu;
     /**
      * Constructor for PoseService.
      *
      * @param gpsimu The GPSIMU object that provides the robot's pose data.
      */
-
-    GPSIMU gpsimu;
-
     public PoseService(GPSIMU gpsimu) {
         super("PoseService");
         this.gpsimu = gpsimu;

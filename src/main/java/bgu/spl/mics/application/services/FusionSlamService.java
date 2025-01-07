@@ -17,7 +17,6 @@ import java.util.List;
 /**
  * FusionSlamService integrates data from multiple sensors to build and update
  * the robot's global map.
- *
  * This service receives TrackedObjectsEvents from LiDAR workers and PoseEvents from the PoseService,
  * transforming and updating the map with new landmarks.
  */
@@ -25,7 +24,7 @@ import java.util.List;
 public class FusionSlamService extends MicroService {
 
     FusionSlam fusionSlam;
-    int currentTick = 0;
+    int currentTick;
 
     List<String> sensors;
     List<TrackedObject> WaitingForPose ;
@@ -57,9 +56,7 @@ public class FusionSlamService extends MicroService {
     @Override
     protected void initialize() {
         System.out.println("DEBUG: initializing FusionSlamService");
-        this.subscribeBroadcast(createdBroadcast.class, (createdBroadcast c)->{
-            sensors.add(c.getSenderId());
-        });
+        this.subscribeBroadcast(createdBroadcast.class, (createdBroadcast c)-> sensors.add(c.getSenderId()));
 
 
         this.subscribeEvent(PoseEvent.class, (p) -> {
