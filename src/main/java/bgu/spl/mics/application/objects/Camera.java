@@ -16,7 +16,6 @@ public class Camera {
     private int frequency; // The time interval at which the camera sends new events.
     private STATUS status; // Camera status: Up, Down, or Error.
     private List<StampedDetectedObjects> detectedObjectsList; // List of detected objects with timestamps.
-    static List<CameraOut> cameras = new ArrayList<>();
 
     // Enum for status
 
@@ -26,7 +25,6 @@ public class Camera {
         this.frequency = frequency;
         this.status = status;
         this.detectedObjectsList = detectedObjectsList;
-        cameras.add(new CameraOut(this));
     }
 
     // Getters
@@ -68,9 +66,6 @@ public class Camera {
         this.detectedObjectsList = detectedObjectsList;
     }
 
-    public static List<CameraOut> getCameras() {
-        return cameras;
-    }
 
     // other methods:
 

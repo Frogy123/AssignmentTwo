@@ -3,6 +3,7 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.*;
+import bgu.spl.mics.parser.Error_Output;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class CameraService extends MicroService {
     StatisticalFolder statisticalFolder;
     List<StampedDetectedObjects> detectedObjectsToSend;
     StampedDetectedObjects lastFrame;
+
     /**
      * Constructor for CameraService.
      *
@@ -35,9 +37,7 @@ public class CameraService extends MicroService {
         detectedObjectsToSend = new ArrayList<StampedDetectedObjects>();
     }
 
-    public void writeLastFrame(){
-        //TODO: write down the last frame to the error file
-    }
+
 
 
     /**
@@ -57,8 +57,8 @@ public class CameraService extends MicroService {
                     for(DetectedObject object: objs.getDetectedObjects()){
                         if(object.getId() == "ERROR") {
                             camera.setStatus(STATUS.ERROR);
-                            sendBroadcast(new CrashedBroadcast(camera.getKey(), object.getDescription()));
                             writeLastFrame();
+                            sendBroadcast(new CrashedBroadcast(camera.getKey(), object.getDescription()));
                             terminate();
                             return;
                         }
@@ -86,12 +86,17 @@ public class CameraService extends MicroService {
         });
         this.subscribeBroadcast(CrashedBroadcast.class,boradcast -> {
             writeLastFrame();
+            sendBroadcast(new CrashedBroadcast(boradcast.getSenderName(), boradcast.getErrorMassage()));
             terminate();
         });
         sendBroadcast(new createdBroadcast(this.getName()));
 
         System.out.println("DEBUG: Finished initializing CameraService" + camera.getId());
 
+    }
+
+    public void writeLastFrame(){
+        Error_Output.getInstance().addCameraLastFrame(camera);
     }
 
 }

@@ -8,10 +8,10 @@ import java.util.List;
 
 public class CameraOut {
     String Name;
-    List<StampedDetectedObjects> detectedObjects;
+        StampedDetectedObjects detectedObjects;
 
     public CameraOut(Camera c) {
         this.Name = c.getKey();
-        this.detectedObjects = c.getDetectedObjectsList();
+        this.detectedObjects = c.getDetectedObjectsList().get(c.getDetectedObjectsList().size()-1);
     }
 }

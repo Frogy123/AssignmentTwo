@@ -27,6 +27,7 @@ public class FusionSlamService extends MicroService {
     FusionSlam fusionSlam;
     int currentTick = 0;
 
+    int sensorsCount = 0;
     List<String> sensors;
     List<TrackedObject> WaitingForPose ;
 
@@ -59,6 +60,7 @@ public class FusionSlamService extends MicroService {
         System.out.println("DEBUG: initializing FusionSlamService");
         this.subscribeBroadcast(createdBroadcast.class, (createdBroadcast c)->{
             sensors.add(c.getSenderId());
+            sensorsCount++;
         });
 
 
@@ -111,11 +113,16 @@ public class FusionSlamService extends MicroService {
         });
 
         this.subscribeBroadcast(CrashedBroadcast.class, (CrashedBroadcast t)->{
-            String ErrorMsg = t.getErrorMassage();
-            String FaultySensor = t.getSenderName();
-            Error_Output error_output = new Error_Output(ErrorMsg, FaultySensor, fusionSlam); //need to fix
-            createOutputFile(error_output);
-            this.terminate();
+            if(sensorsCount == 0){
+                String ErrorMsg = t.getErrorMassage();
+                String FaultySensor = t.getSenderName();
+                Error_Output.getInstance().writeError(ErrorMsg, FaultySensor, fusionSlam); //need to fix
+                createOutputFile(Error_Output.getInstance());
+                this.terminate();
+            }else{
+                sensorsCount--;
+            }
+
 
 
         });
