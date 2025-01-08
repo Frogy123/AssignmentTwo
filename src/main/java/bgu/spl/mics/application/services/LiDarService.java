@@ -2,10 +2,7 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
-import bgu.spl.mics.application.objects.DetectedObject;
-import bgu.spl.mics.application.objects.LiDarWorkerTracker;
-import bgu.spl.mics.application.objects.StatisticalFolder;
-import bgu.spl.mics.application.objects.TrackedObject;
+import bgu.spl.mics.application.objects.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,7 +25,7 @@ public class LiDarService extends MicroService {
      * @param liDarTracker The LiDAR tracker object that this service will use to process data.
      */
     public LiDarService(LiDarWorkerTracker liDarTracker) {
-        super("LiDarService");
+        super("LiDarService" + liDarTracker.getId());
         this.lidarTracker=liDarTracker;
         this.statisticalFolder = StatisticalFolder.getInstance();
     }
@@ -49,7 +46,11 @@ public class LiDarService extends MicroService {
 
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast t) -> {
             List<TrackedObject> trackedObjectsToSend = new ArrayList<>();
-            if(lidarTracker.getLastTrackedObjects() != null){
+            if(LiDarDataBase.getInstance().getLastTime() < t.getTick()){
+                sendBroadcast(new TerminatedBroadcast(this.getName()));
+                terminate();
+            }
+            else if(lidarTracker.getLastTrackedObjects() != null){
 
                 for (TrackedObject trackedObject : lidarTracker.getLastTrackedObjects()){
                     if (trackedObject.getTime() + lidarTracker.getFrequency() <= t.getTick()){
@@ -66,6 +67,7 @@ public class LiDarService extends MicroService {
                 statisticalFolder.incrementNumTrackedObjects(trackedObjectsToSend.size()); // statistical
                 sendEvent(new TrackedObjectsEvent(trackedObjectsToSend));
             }
+
         });
 
         subscribeBroadcast(TerminatedBroadcast.class, (TerminatedBroadcast t) -> {
@@ -75,8 +77,11 @@ public class LiDarService extends MicroService {
             }
         });
         subscribeBroadcast(CrashedBroadcast.class, (CrashedBroadcast t) -> {
+            sendBroadcast(new CrashedBroadcast(t.getSenderName(), t.getErrorMassage(), t.getTime()));
             terminate();
         });
+
+        sendBroadcast(new createdBroadcast(this.getName()));
 
 
 

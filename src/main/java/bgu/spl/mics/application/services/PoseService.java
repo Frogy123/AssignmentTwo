@@ -1,7 +1,9 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.CrashedBroadcast;
 import bgu.spl.mics.application.messages.PoseEvent;
+import bgu.spl.mics.application.messages.TerminatedBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.objects.GPSIMU;
 
@@ -30,12 +32,23 @@ public class PoseService extends MicroService {
     protected void initialize() {
 
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast t) -> {
-            gpsimu.tick();
             if(gpsimu.getPosesSize() > gpsimu.getTick()){
                 PoseEvent poseEvent = new PoseEvent(gpsimu.getCurrentPose(), gpsimu.getTick());
                 sendEvent(poseEvent);
             }
+            gpsimu.tick();
+        });
 
+        this.subscribeBroadcast(TerminatedBroadcast.class, boradcast -> {
+            if(boradcast.getSenderName().equals("FusionSlam")){
+                sendBroadcast(new TerminatedBroadcast(this.getName()));
+                terminate();
+            }
+        });
+
+        this.subscribeBroadcast(CrashedBroadcast.class, boradcast -> {
+            sendBroadcast(new TerminatedBroadcast(this.getName()));
+            terminate();
         });
 
 

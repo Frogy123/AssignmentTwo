@@ -64,15 +64,14 @@ public class FusionSlamService extends MicroService {
 
 
         this.subscribeEvent(PoseEvent.class, (p) -> {
-            while(p.getTime() != currentTick) wait();
-                Pose pose = p.getPose();
-                fusionSlam.getPosesList().add(pose);
+            Pose pose = p.getPose();
+            fusionSlam.getPosesList().add(pose);
         });
 
         this.subscribeEvent(TrackedObjectsEvent.class, (TrackedObjectsEvent t)->{
                 List<TrackedObject> trackedObjects = t.getTrackedObjects();
                 for (TrackedObject tObj : trackedObjects) {
-                    if(FusionSlam.getInstance().getPoseTime() != tObj.getTime()){
+                    if(FusionSlam.getInstance().getPoseTime() >= tObj.getTime()){
                         List<CloudPoint> coordinate = FusionSlam.tranformToGlobalCoordinate(tObj);
 
                         LandMark landMark = getCorrectLandMark(tObj.getId());
@@ -101,25 +100,26 @@ public class FusionSlamService extends MicroService {
         });
 
         this.subscribeBroadcast(TerminatedBroadcast.class, (TerminatedBroadcast t)->{
-            if(!t.getSenderName().equals("TimeService")){
+            if(!t.getSenderName().equals("TimeService") & !t.getSenderName().equals("PoseService")){
                 sensors.remove(t.getSenderName());
                 if(sensors.isEmpty()){
                     Output output = new Output(fusionSlam);
                     File file = createOutputFile(output,inputDirectoryPath);
                     writeOutput(file, output);
-
+                    this.sendBroadcast(new TerminatedBroadcast(this.getName()));
                     this.terminate();
                 }
             }
         });
 
         this.subscribeBroadcast(CrashedBroadcast.class, (CrashedBroadcast t)->{
-            if(sensorsCount == 0){
+            if(sensorsCount == 1){
                 String ErrorMsg = t.getErrorMassage();
                 String FaultySensor = t.getSenderName();
                 Error_Output.getInstance().writeError(ErrorMsg, FaultySensor, fusionSlam); //need to fix
                 File outFile = createOutputFile(Error_Output.getInstance(),inputDirectoryPath);
                 writeOutput(outFile, Error_Output.getInstance());
+                this.sendBroadcast(new TerminatedBroadcast(this.getName()));
                 this.terminate();
             }else{
                 sensorsCount--;
@@ -141,10 +141,12 @@ public class FusionSlamService extends MicroService {
     private void updateLandMark(LandMark landMark, List<CloudPoint> coordinate){
         for(int i = 0; i < coordinate.size(); i++){
             CloudPoint newCoordinate = coordinate.get(i);
-            CloudPoint oldCoordinate = landMark.getCoordinates().get(i);
-
-            landMark.getCoordinates().set(i, CloudPoint.average(oldCoordinate, newCoordinate));
-
+            if(landMark.getCoordinates().size() <= i){
+                landMark.getCoordinates().add(newCoordinate);
+            }else{
+                CloudPoint oldCoordinate = landMark.getCoordinates().get(i);
+                landMark.getCoordinates().set(i, CloudPoint.average(oldCoordinate, newCoordinate));
+            }
         }
     }
 

@@ -29,6 +29,8 @@ public abstract class MicroService implements Runnable {
     private final MessageBus messageBus;
     private ConcurrentHashMap<Class<? extends Event>, Callback> eventCallbackMap;
     private ConcurrentHashMap<Class<? extends Broadcast>, Callback> brodcastCallbackMap;
+    protected static int counter = 0;
+
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
@@ -39,6 +41,7 @@ public abstract class MicroService implements Runnable {
         messageBus = MessageBusImpl.getInstance();
         eventCallbackMap = new ConcurrentHashMap<>();
         brodcastCallbackMap = new ConcurrentHashMap<>();
+        counter++;
     }
 
     /**
@@ -146,7 +149,9 @@ public abstract class MicroService implements Runnable {
      * message.
      */
     protected final void terminate() {
+        System.err.println("DEBUG: " + this.getName() + " terminated");
         this.terminated = true;
+        counter--;
     }
 
     /**
@@ -166,7 +171,6 @@ public abstract class MicroService implements Runnable {
         messageBus.register(this);
         initialize();
         while (!terminated) {
-            synchronized (this) {
                 try {
                     Message msg = messageBus.awaitMessage(this);
                     if (msg instanceof Event) {
@@ -174,6 +178,7 @@ public abstract class MicroService implements Runnable {
                         if(msg instanceof DetectedObjectsEvent){
                             System.out.println("DEBUG: DetectedObject event of time: " + ((DetectedObjectsEvent) msg).getStampedObjects().getTime());
                         }
+
                         Callback callback = eventCallbackMap.get(msg.getClass());
                         callback.call(msg);
                     } else if (msg instanceof Broadcast) {
@@ -183,7 +188,7 @@ public abstract class MicroService implements Runnable {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
+
         }
 
         messageBus.unregister(this);

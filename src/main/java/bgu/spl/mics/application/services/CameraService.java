@@ -42,8 +42,13 @@ public class CameraService extends MicroService {
      */
     @Override
     protected void initialize() {
+
         this.subscribeBroadcast(TickBroadcast.class,(TickBroadcast t) -> {
-            if(camera.getStatus() == STATUS.UP) {
+            if(camera.getLastTime() < t.getTick()) {
+                sendBroadcast(new TerminatedBroadcast(this.getName()));
+                terminate();
+            }
+            else if(camera.getStatus() == STATUS.UP) {
                 StampedDetectedObjects stampedDetectedObjects = camera.getReadyToSendObjects(t.getTick()); // get objects that i can send immediately delay considered
                 if (stampedDetectedObjects != null) {
                     String errorDescription = getError(stampedDetectedObjects);
@@ -53,7 +58,7 @@ public class CameraService extends MicroService {
                         statisticalFolder.incrementNumDetectedObjects(stampedDetectedObjects.getNumOfDetectedObjects()); // statistical
                         sendEvent( new DetectedObjectsEvent(stampedDetectedObjects)); // send Event
                     }
-                    else handleError(errorDescription);
+                    else handleError(errorDescription, t.getTick());
 
                 }
             }
@@ -67,8 +72,8 @@ public class CameraService extends MicroService {
         });
 
         this.subscribeBroadcast(CrashedBroadcast.class,boradcast -> {
-            writeLastFrame();
-            sendBroadcast(new CrashedBroadcast(boradcast.getSenderName(), boradcast.getErrorMassage()));
+            writeLastFrame(boradcast.getTime());
+            sendBroadcast(new CrashedBroadcast(boradcast.getSenderName(), boradcast.getErrorMassage(), boradcast.getTime()));
             terminate();
         });
         sendBroadcast(new createdBroadcast(this.getName()));
@@ -88,15 +93,15 @@ public class CameraService extends MicroService {
         return null;
     }
 
-    private void handleError(String errorDescripition){
+    private void handleError(String errorDescripition, int t){
         camera.setStatus(STATUS.ERROR);
-        writeLastFrame();
-        sendBroadcast(new CrashedBroadcast(camera.getKey(), errorDescripition));
+        writeLastFrame(t);
+        sendBroadcast(new CrashedBroadcast(camera.getKey(), errorDescripition, t));
         terminate();
     }
 
-    public void writeLastFrame(){
-        Error_Output.getInstance().addCameraLastFrame(camera);
+    public void writeLastFrame(int time){
+        Error_Output.getInstance().addCameraLastFrame(camera, time);
     }
 
 

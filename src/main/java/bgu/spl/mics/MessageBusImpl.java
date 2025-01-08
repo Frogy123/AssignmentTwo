@@ -67,7 +67,9 @@ public class MessageBusImpl implements MessageBus {
 		// add rm to the group of registered microservices subscribed to broadcast of type
 		broadcastSubsTable.putIfAbsent(type, new ConcurrentLinkedQueue<>());
 		Queue<RegisteredMicroService> lst = broadcastSubsTable.get(type);
-		lst.add(rm);
+		synchronized (type) {
+			lst.add(rm);
+		}
 		// add type as a broadcast subscription of mine
 		rm.broadcastSubs.add(type);
 			}
@@ -90,16 +92,20 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
-		RegisteredMicroService chosenRm;
 		Queue<RegisteredMicroService> subs = eventSubsTable.get(e.getClass());
-		// needs syncronization - in case of two events of the same class, the subs Queue will be shared - in case there is only one element two times removed may be preformed
-		synchronized (subs) {
-			chosenRm = subs.remove();
-			subs.add(chosenRm);
+		synchronized(e.getClass()) {
+			RegisteredMicroService chosenRm = subs.remove(); // remove the first rm in the Queue
+			synchronized (chosenRm) {
+				chosenRm.myMessageQueue.add(e);
+			}
+
+			subs.add(chosenRm); // insert it as last
 		}
-		chosenRm.myMessageQueue.add(e);
+
+
 		Future<T> fut = new Future<>();
 		eventToFuture.put(e, fut);
+
 		return fut;
 	}
 

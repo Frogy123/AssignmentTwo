@@ -64,6 +64,10 @@ public class Camera {
         this.detectedObjectsList = detectedObjectsList;
     }
 
+    public int getLastTime(){
+        return detectedObjectsList.get(detectedObjectsList.size()-1).getTime();
+    }
+
 
     // other methods:
 

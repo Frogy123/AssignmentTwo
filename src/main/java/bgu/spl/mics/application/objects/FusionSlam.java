@@ -61,7 +61,8 @@ public class FusionSlam {
      */
     //static methods
     public static CloudPoint tranformToGlobalCoordinates(CloudPoint point, int time){
-        Pose corespondingPose = FusionSlam.getInstance().getPosesList().get(time);
+        FusionSlam fusionSlam = FusionSlam.getInstance();
+        Pose corespondingPose = fusionSlam.getPosesList().get(time);
         float yawRad = (float) Math.toRadians(corespondingPose.getYaw());
         float cosYaw = (float) Math.cos(yawRad);
         float sinYaw = (float) Math.sin(yawRad);
@@ -76,7 +77,7 @@ public class FusionSlam {
         List<CloudPoint> localPoints = t.getCoordinates();
         List<CloudPoint> globalPoints = new ArrayList<CloudPoint>();
         for (int i = 0; i < localPoints.size(); i++) {
-            globalPoints.add(tranformToGlobalCoordinates(localPoints.get(i), t.getTime()));
+            globalPoints.add(tranformToGlobalCoordinates(localPoints.get(i), t.getTime()-1));
         }
         return globalPoints;
     }

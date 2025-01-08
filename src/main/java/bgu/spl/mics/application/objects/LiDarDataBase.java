@@ -53,6 +53,9 @@ public class LiDarDataBase {
         return null;
     }
 
+    public int getLastTime(){
+        return data.get(data.size()-1).getTime();
+    }
 
 
 

@@ -34,8 +34,8 @@ public class Error_Output implements Out {
     }
 
 
-    public void addCameraLastFrame(Camera c){
-        LastFrame.add(new CameraOut(c));
+    public void addCameraLastFrame(Camera c, int time){
+        LastFrame.add(new CameraOut(c, time));
     }
 
 
