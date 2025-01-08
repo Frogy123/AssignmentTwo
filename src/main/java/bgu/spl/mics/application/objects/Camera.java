@@ -31,7 +31,7 @@ public class Camera {
     }
 
     public String getKey() {
-        return "Camera " + id;
+        return camera_key;
     }
 
     public int getFrequency() {
