@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LidarDataParser {
@@ -15,7 +16,7 @@ public class LidarDataParser {
         // Create Gson object
         Gson gson = new Gson();
         List<RawStampedCloudPoints> RawLidarDataList = null;
-        List<StampedCloudPoints> lidarDataList = null;
+        List<StampedCloudPoints> lidarDataList = new ArrayList<>();
         try {
             // Define the Type for the List<StampedCloudPoints> to handle generic types
             Type lidarDataType = new TypeToken<List<RawStampedCloudPoints>>(){}.getType();
