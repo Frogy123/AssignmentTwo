@@ -1,10 +1,16 @@
 package bgu.spl.mics.application.objects;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * CloudPoint represents a specific point in a 3D space as detected by the LiDAR.
  * These points are used to generate a point cloud representing objects in the environment.
  */
 public class CloudPoint {
+    List<Double> coordinates = new ArrayList<Double>();
     private double x;
     private double y;
     private double z; //all cloud points have the same z value added for parsing
@@ -41,4 +47,9 @@ public class CloudPoint {
     }
 
 
+    public void initialize() {
+        coordinates.add(x);
+        coordinates.add(y);
+        coordinates.add(z);
+    }
 }

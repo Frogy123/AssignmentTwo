@@ -52,15 +52,6 @@ public class GurionRockRunner {
         List<Camera> cameras = CameraMerger.merge(systemConfiguration.getCameras().getCamerasConfigurations(), cameraData);
 
 
-
-
-
-
-
-
-
-
-
         // TODO: Parse configuration file.
 
 
