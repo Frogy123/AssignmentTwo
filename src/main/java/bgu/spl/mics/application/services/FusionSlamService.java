@@ -102,8 +102,8 @@ public class FusionSlamService extends MicroService {
         });
 
         this.subscribeBroadcast(TerminatedBroadcast.class, (TerminatedBroadcast t)->{
-            if(!t.getSenderId().equals("TimeService")){
-                sensors.remove(t.getSenderId());
+            if(!t.getSenderName().equals("TimeService")){
+                sensors.remove(t.getSenderName());
                 if(sensors.isEmpty()){
                     Output output = new Output(fusionSlam);
                     createOutputFile(output);

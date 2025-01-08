@@ -2,7 +2,12 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
+import bgu.spl.mics.application.objects.DetectedObject;
 import bgu.spl.mics.application.objects.LiDarWorkerTracker;
+import bgu.spl.mics.application.objects.TrackedObject;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * LiDarService is responsible for processing data from the LiDAR sensor and
@@ -20,7 +25,7 @@ public class LiDarService extends MicroService {
      * @param liDarTracker The LiDAR tracker object that this service will use to process data.
      */
     public LiDarService(LiDarWorkerTracker liDarTracker) {
-        super("LiDarService" + liDarTracker.getId());
+        super("LiDarService");
         this.lidarTracker=liDarTracker;
     }
 
@@ -31,24 +36,34 @@ public class LiDarService extends MicroService {
      */
     @Override
     protected void initialize() {
-        System.out.println("DEBUG: initializing LiDarService" + lidarTracker.getId());
+
+        subscribeEvent(DetectedObjectsEvent.class, (DetectedObjectsEvent t) -> {
+            lidarTracker.trackObjects(t.getStampedObjects());
+        });
 
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast t) -> {
-
+            List<TrackedObject> trackedObjectsToSend = new LinkedList<>();
+            for (TrackedObject trackedObject : lidarTracker.getLastTrackedObjects()){
+                if (trackedObject.getTime() + lidarTracker.getFrequency() <= t.getTick()){
+                    trackedObjectsToSend.add(trackedObject);
+                }
+            }
+            if(!trackedObjectsToSend.isEmpty()){
+                sendEvent(new TrackedObjectsEvent(trackedObjectsToSend));
+            }
         });
-        subscribeBroadcast(TerminatedBroadcast.class, (TerminatedBroadcast t) -> {
 
+        subscribeBroadcast(TerminatedBroadcast.class, (TerminatedBroadcast t) -> {
+            if (t.getSenderName().equals("TimeService")) {
+                sendBroadcast(new TerminatedBroadcast(this.getName()));
+                terminate();
+            }
         });
         subscribeBroadcast(CrashedBroadcast.class, (CrashedBroadcast t) -> {
-
-        });
-        subscribeEvent(DetectedObjectsEvent.class, (DetectedObjectsEvent t) -> {
-
+            terminate();
         });
 
-        sendBroadcast(new createdBroadcast(this.getName()));
 
-        System.out.println("DEBUG: finished initializing LiDarService" + lidarTracker.getId());
 
     }
 }
