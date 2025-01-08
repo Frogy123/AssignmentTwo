@@ -122,9 +122,6 @@ public class FusionSlamService extends MicroService {
             }else{
                 sensorsCount--;
             }
-
-
-
         });
 
         System.out.println("DEBUG: finished initializing FusionSlamService");

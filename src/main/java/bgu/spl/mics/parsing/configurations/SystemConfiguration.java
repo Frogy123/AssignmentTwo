@@ -1,6 +1,7 @@
 package bgu.spl.mics.parsing.configurations;
 
 import bgu.spl.mics.application.objects.Camera;
+
 import java.util.List;
 
 public class SystemConfiguration {

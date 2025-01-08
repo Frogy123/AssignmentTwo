@@ -40,7 +40,7 @@ public class TimeService extends MicroService {
             try {
                 Thread.sleep(tickTime*1000L);
             } catch (InterruptedException e) {
-                sendBroadcast(new CrashedBroadcast("TimeService", "InterruptedException", currentTick));
+                sendBroadcast(new CrashedBroadcast("TimeService", "InterruptedException"));
             }
             sendBroadcast(new TickBroadcast(currentTick));
             currentTick++;

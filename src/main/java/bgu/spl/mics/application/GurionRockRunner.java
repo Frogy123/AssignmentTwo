@@ -4,7 +4,7 @@ import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.application.services.*;
 import bgu.spl.mics.parsing.LidarParser;
 import bgu.spl.mics.parsing.PathResolver;
-import bgu.spl.mics.parsing.configurations.CameraConfiguration;
+import bgu.spl.mics.parsing.configurations.Cameras;
 import bgu.spl.mics.parsing.configurations.SystemConfiguration;
 import bgu.spl.mics.parsing.mergers.CameraMerger;
 import bgu.spl.mics.parsing.parsers.CameraDataParser;
@@ -52,6 +52,15 @@ public class GurionRockRunner {
         List<Camera> cameras = CameraMerger.merge(systemConfiguration.getCameras().getCamerasConfigurations(), cameraData);
 
 
+
+
+
+
+
+
+
+
+
         // TODO: Parse configuration file.
 
 
@@ -80,7 +89,9 @@ public class GurionRockRunner {
             // Initialize the LidarWorker
 
             List<LiDarWorkerTracker> lidarWorkersList =systemConfiguration.getLidarWorkers().getLidarConfigurations();
-            LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(systemConfiguration.getLidarWorkers().getLidars_data_path());
+            String lidarDataRelPath = systemConfiguration.getLidarWorkers().getLidars_data_path();
+            String lidarDataAbsPath = PathResolver.resolveRelativePath(lidarDataRelPath,configPath);
+            LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(lidarDataAbsPath);
 
             for (LiDarWorkerTracker lidarWorker : lidarWorkersList) {
                 LiDarService lidarService = new LiDarService(lidarWorker);

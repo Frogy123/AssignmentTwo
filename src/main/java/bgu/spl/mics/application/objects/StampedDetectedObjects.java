@@ -1,5 +1,7 @@
 package bgu.spl.mics.application.objects;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,9 @@ import java.util.List;
  * Includes the time of detection and a list of detected objects.
  */
 public class StampedDetectedObjects {
+    @SerializedName("time")
     private int stampTime;
+    @SerializedName("detectedObjects")
     private List<DetectedObject> detectedObjects;
     public StampedDetectedObjects(int stampTime) {
         this.stampTime=stampTime;
