@@ -5,9 +5,7 @@ import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.parsing.Error_Output;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
 
 /**
  * CameraService is responsible for processing data from the camera and
@@ -44,7 +42,6 @@ public class CameraService extends MicroService {
      */
     @Override
     protected void initialize() {
-        System.out.println("DEBUG: initializing CameraService" + camera.getId());
         this.subscribeBroadcast(TickBroadcast.class,(TickBroadcast t) -> {
             if(camera.getStatus() == STATUS.UP) {
                 StampedDetectedObjects stampedDetectedObjects = camera.getReadyToSendObjects(t.getTick()); // get objects that i can send immediately delay considered
@@ -54,16 +51,13 @@ public class CameraService extends MicroService {
                     {
                         lastFrame = stampedDetectedObjects; //save in case of crash in the next tick
                         statisticalFolder.incrementNumDetectedObjects(stampedDetectedObjects.getNumOfDetectedObjects()); // statistical
-                        for(DetectedObject obj: stampedDetectedObjects.getDetectedObjects())
-                            sendEvent( new DetectedObjectsEvent(stampedDetectedObjects)); // send Event
-                        System.out.println("DEBUG: CameraService" + camera.getId() + " sent DetectedObjectsEvent");
+                        sendEvent( new DetectedObjectsEvent(stampedDetectedObjects)); // send Event
                     }
                     else handleError(errorDescription);
 
                 }
             }
         });
-        System.out.println("DEBUG: Finished subscribing CameraService" + camera.getId());
 
         this.subscribeBroadcast(TerminatedBroadcast.class, boradcast -> {
             if(boradcast.getSenderName().equals("TimeService")){

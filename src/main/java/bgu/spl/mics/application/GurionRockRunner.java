@@ -38,10 +38,9 @@ public class GurionRockRunner {
      */
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
-        // TODO: Parse configuration file.
         //parse system config
         String configPath = args[0];
+        String inputDirectoryPath = PathResolver.getDirectoryPath(configPath);
         SystemConfiguration systemConfiguration = SystemConfigurationParser.parse(configPath);
 
         //parse camera data
@@ -77,7 +76,7 @@ public class GurionRockRunner {
         try {
             // Initialize the FusionSlamService
             FusionSlam fusionSlam = FusionSlam.getInstance();
-            FusionSlamService fusionSlamService = new FusionSlamService(fusionSlam);
+            FusionSlamService fusionSlamService = new FusionSlamService(fusionSlam,inputDirectoryPath);
             executorService.submit(fusionSlamService);
 
             // Initialize the CameraService
@@ -90,8 +89,8 @@ public class GurionRockRunner {
             // Initialize the LidarWorker
 
             List<LiDarWorkerTracker> lidarWorkersList =systemConfiguration.getLidarWorkers().getLidarConfigurations();
-
             for (LiDarWorkerTracker lidarWorker : lidarWorkersList) {
+                lidarWorker.setData(lidarDataBase);
                 LiDarService lidarService = new LiDarService(lidarWorker);
                 executorService.submit(lidarService);
             }

@@ -34,6 +34,10 @@ public class LiDarDataBase {
         return InstanceHolder.instance;
     }
 
+    public static LiDarDataBase getInstance() {
+        return InstanceHolder.instance;
+    }
+
 
     /**
      * searches for specific points

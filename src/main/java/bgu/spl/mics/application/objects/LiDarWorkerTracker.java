@@ -14,20 +14,12 @@ public class LiDarWorkerTracker {
 	private int id; // The ID of the LiDar.
 	private int frequency; // The time interval at which the LiDar sends new events.
 	private STATUS status; // LiDar status: Up, Down, or Error.
-	private List<TrackedObject> lastTrackedObjects; // The last objects the LiDar tracked.
+	private List<TrackedObject> lastTrackedObjects = new LinkedList<>(); // The last objects the LiDar tracked.
 
-
-
-
-
-	// Constructor
-	public LiDarWorkerTracker(int id, int frequency, STATUS status, List<TrackedObject> lastTrackedObjects,LiDarDataBase data) {
-		this.id = id;
-		this.frequency = frequency;
-		this.status = status;
-		this.lastTrackedObjects = lastTrackedObjects;
+	public void setData(LiDarDataBase data){
 		this.data = data;
 	}
+
 
 	// Getters
 	public int getId() {

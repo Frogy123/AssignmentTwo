@@ -26,5 +26,13 @@ public class PathResolver {
         return resolvedPath.toAbsolutePath().toString();
     }
 
+    public static String getDirectoryPath(String filePath){
+        // Convert the absolute file path to a Path object
+        Path path = Paths.get(filePath);
+        // Get the directory where the absolute file is located
+        Path directoryPath = path.getParent();
+        return directoryPath.toString();
+    }
+
 }
 

@@ -30,22 +30,22 @@ public class FusionSlamService extends MicroService {
     int sensorsCount = 0;
     List<String> sensors;
     List<TrackedObject> WaitingForPose ;
-
     StatisticalFolder statisticalFolder;
+    String inputDirectoryPath;
 
     /**
      * Constructor for FusionSlamService.
      *
      * @param _fusionSlam The FusionSLAM object responsible for managing the global map.
      */
-    public FusionSlamService(FusionSlam _fusionSlam) {
+    public FusionSlamService(FusionSlam _fusionSlam, String inputDirectoryPath) {
         super("FusionSlamService");
         fusionSlam = _fusionSlam;
         currentTick = 0;
         sensors = new ArrayList<>();
         WaitingForPose = new ArrayList<>();
         this.statisticalFolder = StatisticalFolder.getInstance();
-
+        this.inputDirectoryPath = inputDirectoryPath;
     }
 
 
@@ -57,7 +57,6 @@ public class FusionSlamService extends MicroService {
      */
     @Override
     protected void initialize() {
-        System.out.println("DEBUG: initializing FusionSlamService");
         this.subscribeBroadcast(createdBroadcast.class, (createdBroadcast c)->{
             sensors.add(c.getSenderId());
             sensorsCount++;
@@ -106,7 +105,7 @@ public class FusionSlamService extends MicroService {
                 sensors.remove(t.getSenderName());
                 if(sensors.isEmpty()){
                     Output output = new Output(fusionSlam);
-                    File file = createOutputFile(output);
+                    File file = createOutputFile(output,inputDirectoryPath);
                     writeOutput(file, output);
 
                     this.terminate();
@@ -119,7 +118,7 @@ public class FusionSlamService extends MicroService {
                 String ErrorMsg = t.getErrorMassage();
                 String FaultySensor = t.getSenderName();
                 Error_Output.getInstance().writeError(ErrorMsg, FaultySensor, fusionSlam); //need to fix
-                File outFile = createOutputFile(Error_Output.getInstance());
+                File outFile = createOutputFile(Error_Output.getInstance(),inputDirectoryPath);
                 writeOutput(outFile, Error_Output.getInstance());
                 this.terminate();
             }else{
@@ -127,7 +126,6 @@ public class FusionSlamService extends MicroService {
             }
         });
 
-        System.out.println("DEBUG: finished initializing FusionSlamService");
 
     }
 
@@ -152,23 +150,31 @@ public class FusionSlamService extends MicroService {
 
 
 
-    private File createOutputFile(Out out){
-
+    private File createOutputFile(Out out, String directoryPath) {
+        // Determine the file name based on the type of 'out'
         String fileName = out instanceof Error_Output ? "error_output.json" : "output.json";
-        out = out instanceof Error_Output ? (Error_Output) out : (Output) out;
 
         try {
-            File file = new File(fileName);
-            if (file.createNewFile()) {
-                System.out.println("File created: " + file.getName());
-                return file;
-            } else {
-                System.out.println("File already exists.");
+            // Ensure the directory exists
+            File directory = new File(directoryPath);
+            if (!directory.exists() && !directory.mkdirs()) {
+                System.err.println("Failed to create directory: " + directoryPath);
+                return null;
             }
+
+            // Create the file in the specified directory
+            File file = new File(directory, fileName);
+            if (file.createNewFile()) {
+                System.out.println("File created: " + file.getAbsolutePath());
+            } else {
+                System.out.println("File already exists: " + file.getAbsolutePath());
+            }
+            return file;
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+            System.err.println("An error occurred while creating the file in directory: " + directoryPath);
             e.printStackTrace();
         }
+
         return null;
     }
 

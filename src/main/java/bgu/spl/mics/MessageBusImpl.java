@@ -1,4 +1,6 @@
 package bgu.spl.mics;
+import bgu.spl.mics.application.services.LiDarService;
+
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,12 +59,10 @@ public class MessageBusImpl implements MessageBus {
 			rm.eventSubs.add(type);
 		}
 
-		System.out.println("DEBUG: " + m.getName() + " subscribed to Event " + type.getSimpleName());
 	}
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-		System.out.println("DEBUG: " + m.getName() + " subscribing to Broadcast " + type.getSimpleName());
 		RegisteredMicroService rm = regTable.get(m);
 		// add rm to the group of registered microservices subscribed to broadcast of type
 		broadcastSubsTable.putIfAbsent(type, new ConcurrentLinkedQueue<>());
@@ -70,8 +70,7 @@ public class MessageBusImpl implements MessageBus {
 		lst.add(rm);
 		// add type as a broadcast subscription of mine
 		rm.broadcastSubs.add(type);
-		System.out.println("DEBUG: " + m.getName() + " subscribed to Broadcast " + type.getSimpleName());
-	}
+			}
 
 	@Override
 	public <T> void complete(Event<T> e, T result) {
@@ -79,8 +78,7 @@ public class MessageBusImpl implements MessageBus {
 		fut.resolve(result);
 		fut.isDone();
 
-		System.out.println("DEBUG: Event " + e.getClass().getSimpleName() + " completed with result: " + result);
-	}
+			}
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
@@ -88,28 +86,27 @@ public class MessageBusImpl implements MessageBus {
 			rm.myMessageQueue.add(b);
 		}
 
-		System.out.println("DEBUG: Broadcast " + b.getClass().getSimpleName() + " sent to subscribers.");
-	}
+			}
 
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
+		RegisteredMicroService chosenRm;
 		Queue<RegisteredMicroService> subs = eventSubsTable.get(e.getClass());
-		RegisteredMicroService chosenRm = subs.remove();
-
-		subs.add(chosenRm);
-
+		// needs syncronization - in case of two events of the same class, the subs Queue will be shared - in case there is only one element two times removed may be preformed
+		synchronized (subs) {
+			chosenRm = subs.remove();
+			subs.add(chosenRm);
+		}
+		chosenRm.myMessageQueue.add(e);
 		Future<T> fut = new Future<>();
 		eventToFuture.put(e, fut);
-
-		System.out.println("DEBUG: Event " + e.getClass().getSimpleName() + " sent to " + chosenRm);
 		return fut;
 	}
 
 	@Override
 	public void register(MicroService m) {
 		regTable.put(m, new RegisteredMicroService());
-		System.out.println("DEBUG: MicroService " + m.getName() + " registered.");
-	}
+			}
 
 	@Override
 	public void unregister(MicroService m) {
@@ -122,13 +119,11 @@ public class MessageBusImpl implements MessageBus {
 			broadcastSubsTable.get(type).remove(toUnreg);
 		}
 
-		System.out.println("DEBUG: MicroService " + m.getName() + " unregistered.");
-	}
+			}
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
 		RegisteredMicroService rm = regTable.get(m);
-		System.out.println("DEBUG: MicroService " + m.getName() + " awaiting message.");
 		return rm.myMessageQueue.take(); // will wait if empty
 	}
 
@@ -139,13 +134,11 @@ public class MessageBusImpl implements MessageBus {
 
 	public Boolean isSubscribedToBroadcast(Class<? extends Broadcast> type, MicroService m) {
 		RegisteredMicroService rm = regTable.get(m);
-		System.out.println("DEBUG: Checking if MicroService " + m.getName() + " is subscribed to Broadcast " + type.getSimpleName());
-		return broadcastSubsTable.get(type).contains(rm) && rm.broadcastSubs.contains(type);
+				return broadcastSubsTable.get(type).contains(rm) && rm.broadcastSubs.contains(type);
 	}
 
 	public <T> Boolean isSubscribedToEvent(Class<? extends Event<T>> type, MicroService m) {
 		RegisteredMicroService rm = regTable.get(m);
-		System.out.println("DEBUG: Checking if MicroService " + m.getName() + " is subscribed to Event " + type.getSimpleName());
-		return eventSubsTable.get(type).contains(rm) && rm.eventSubs.contains(type);
+				return eventSubsTable.get(type).contains(rm) && rm.eventSubs.contains(type);
 	}
 }

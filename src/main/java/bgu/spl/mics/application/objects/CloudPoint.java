@@ -22,6 +22,12 @@ public class CloudPoint {
         this.y = y;
     }
 
+    public CloudPoint(double[] coordinates){
+        this.x = coordinates[0];
+        this.y = coordinates[1];
+        this.z = coordinates[2];
+    }
+
     public static CloudPoint average(CloudPoint oldCoordinate, CloudPoint newCoordinate) {
         double x = (oldCoordinate.getX() + newCoordinate.getX()) / 2;
         double y = (oldCoordinate.getY() + newCoordinate.getY()) / 2;

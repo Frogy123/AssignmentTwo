@@ -4,6 +4,7 @@ import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.DetectedObject;
 import bgu.spl.mics.application.objects.LiDarWorkerTracker;
+import bgu.spl.mics.application.objects.StatisticalFolder;
 import bgu.spl.mics.application.objects.TrackedObject;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 public class LiDarService extends MicroService {
     private LiDarWorkerTracker lidarTracker;
+    private StatisticalFolder statisticalFolder;
     /**
      * Constructor for LiDarService.
      *
@@ -28,6 +30,7 @@ public class LiDarService extends MicroService {
     public LiDarService(LiDarWorkerTracker liDarTracker) {
         super("LiDarService");
         this.lidarTracker=liDarTracker;
+        this.statisticalFolder = StatisticalFolder.getInstance();
     }
 
     /**
@@ -39,20 +42,28 @@ public class LiDarService extends MicroService {
     protected void initialize() {
 
         subscribeEvent(DetectedObjectsEvent.class, (DetectedObjectsEvent t) -> {
+            System.out.println("DEBUG: recieved DetectedObjectsEvent " + t.getStampedObjects().getDetectedObjects().toString() );
+
             lidarTracker.trackObjects(t.getStampedObjects());
         });
 
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast t) -> {
             List<TrackedObject> trackedObjectsToSend = new ArrayList<>();
-            List<TrackedObject> lastTrackedObject = lidarTracker.getLastTrackedObjects();
-            if(lastTrackedObject != null){
+            if(lidarTracker.getLastTrackedObjects() != null){
+
                 for (TrackedObject trackedObject : lidarTracker.getLastTrackedObjects()){
                     if (trackedObject.getTime() + lidarTracker.getFrequency() <= t.getTick()){
                         trackedObjectsToSend.add(trackedObject);
+                        System.out.println("DEBUG: tracked object: " + trackedObject.getId() );
                     }
                 }
             }
             if(!trackedObjectsToSend.isEmpty()){
+                for(TrackedObject trackedObjectToRemove: trackedObjectsToSend){
+                    lidarTracker.getLastTrackedObjects().remove(trackedObjectToRemove);
+                }
+                System.out.println("DEBUG: incrementing NumTrackedObjects, by: " + trackedObjectsToSend.size() );
+                statisticalFolder.incrementNumTrackedObjects(trackedObjectsToSend.size()); // statistical
                 sendEvent(new TrackedObjectsEvent(trackedObjectsToSend));
             }
         });

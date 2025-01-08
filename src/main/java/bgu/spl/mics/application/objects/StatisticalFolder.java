@@ -37,8 +37,8 @@ public class StatisticalFolder {
     public void incrementNumDetectedObjects(int num) {
         numDetectedObjects+=num;
     }   
-    public void incrementNumTrackedObjects() {
-        numTrackedObjects++;
+    public void incrementNumTrackedObjects(int num) {
+        numTrackedObjects += num;
     }
     public void incrementNumLandmarks() {
         numLandmarks++;

@@ -24,10 +24,10 @@ public class PoseService extends MicroService {
     /**
      * Initializes the PoseService.
      * Subscribes to TickBroadcast and sends PoseEvents at every tick based on the current pose.
+     * Subscribes to TickBroadcast and sends PoseEvents at every tick based on the current pose.
      */
     @Override
     protected void initialize() {
-        System.out.println("DEBUG: initializing PoseService");
 
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast t) -> {
             gpsimu.tick();
@@ -38,7 +38,6 @@ public class PoseService extends MicroService {
 
         });
 
-        System.out.println("DEBUG: finished initializing PoseService");
 
     }
 }

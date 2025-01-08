@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.messages.DetectedObjectsEvent;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -88,7 +90,6 @@ public abstract class MicroService implements Runnable {
      */
     protected final synchronized  <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
         messageBus.subscribeBroadcast(type, this);
-        System.out.println("DEBUG: " + brodcastCallbackMap);
         brodcastCallbackMap.put(type, callback);
 
     }
@@ -162,15 +163,17 @@ public abstract class MicroService implements Runnable {
      */
     @Override
     public final void run() {
-        System.out.println("DEBUG:" + getName() + " Running");
         messageBus.register(this);
         initialize();
-        System.err.println("DEBUG:" + getName() + " Finished initializing");
         while (!terminated) {
             synchronized (this) {
                 try {
                     Message msg = messageBus.awaitMessage(this);
                     if (msg instanceof Event) {
+                        //DEBUG:
+                        if(msg instanceof DetectedObjectsEvent){
+                            System.out.println("DEBUG: DetectedObject event of time: " + ((DetectedObjectsEvent) msg).getStampedObjects().getTime());
+                        }
                         Callback callback = eventCallbackMap.get(msg.getClass());
                         callback.call(msg);
                     } else if (msg instanceof Broadcast) {
@@ -183,7 +186,6 @@ public abstract class MicroService implements Runnable {
             }
         }
 
-        System.out.println("DEBUG:" + getName() + " Finished running");
         messageBus.unregister(this);
     }
 
