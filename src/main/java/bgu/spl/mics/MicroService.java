@@ -35,6 +35,8 @@ public abstract class MicroService implements Runnable {
     public MicroService(String name) {
         this.name = name;
         messageBus = MessageBusImpl.getInstance();
+        eventCallbackMap = new ConcurrentHashMap<>();
+        brodcastCallbackMap = new ConcurrentHashMap<>();
     }
 
     /**
@@ -86,6 +88,7 @@ public abstract class MicroService implements Runnable {
      */
     protected final synchronized  <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
         messageBus.subscribeBroadcast(type, this);
+        System.out.println("DEBUG: " + brodcastCallbackMap);
         brodcastCallbackMap.put(type, callback);
 
     }
@@ -162,6 +165,7 @@ public abstract class MicroService implements Runnable {
         System.out.println("DEBUG:" + getName() + " Running");
         messageBus.register(this);
         initialize();
+        System.err.println("DEBUG:" + getName() + " Finished initializing");
         while (!terminated) {
             synchronized (this) {
                 try {

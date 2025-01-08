@@ -8,13 +8,16 @@ import java.util.List;
  */
 public class GPSIMU {
 
+
+
     private static class GPSIMUHolder{
         private static GPSIMU instance = new GPSIMU();
     }
 
+    List<Pose> poses;
     int currentTick;
     STATUS status;
-    List<Pose> poses;
+
 
     public void tick(){
         currentTick++;
@@ -34,6 +37,14 @@ public class GPSIMU {
 
     public Pose getCurrentPose(){
         return poses.get(currentTick);
+    }
+
+    public void setPoses(List<Pose> posesToInitialiaze) {
+        this.poses = posesToInitialiaze;
+    }
+
+    public int getPosesSize(){
+        return poses.size();
     }
 
     public int getTick(){

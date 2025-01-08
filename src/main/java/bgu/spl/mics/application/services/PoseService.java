@@ -31,8 +31,11 @@ public class PoseService extends MicroService {
 
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast t) -> {
             gpsimu.tick();
-            PoseEvent poseEvent = new PoseEvent(gpsimu.getCurrentPose(), gpsimu.getTick());
-            sendEvent(poseEvent);
+            if(gpsimu.getPosesSize() > gpsimu.getTick()){
+                PoseEvent poseEvent = new PoseEvent(gpsimu.getCurrentPose(), gpsimu.getTick());
+                sendEvent(poseEvent);
+            }
+
         });
 
         System.out.println("DEBUG: finished initializing PoseService");

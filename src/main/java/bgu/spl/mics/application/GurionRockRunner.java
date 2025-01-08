@@ -8,6 +8,7 @@ import bgu.spl.mics.parsing.configurations.Cameras;
 import bgu.spl.mics.parsing.configurations.SystemConfiguration;
 import bgu.spl.mics.parsing.mergers.CameraMerger;
 import bgu.spl.mics.parsing.parsers.CameraDataParser;
+import bgu.spl.mics.parsing.parsers.PoseDataParser;
 import bgu.spl.mics.parsing.parsers.SystemConfigurationParser;
 
 import java.nio.file.Path;
@@ -38,7 +39,7 @@ public class GurionRockRunner {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
-
+        // TODO: Parse configuration file.
         //parse system config
         String configPath = args[0];
         SystemConfiguration systemConfiguration = SystemConfigurationParser.parse(configPath);
@@ -51,8 +52,17 @@ public class GurionRockRunner {
         //merge cameras config with camera data
         List<Camera> cameras = CameraMerger.merge(systemConfiguration.getCameras().getCamerasConfigurations(), cameraData);
 
+        //parse lidar data
+        String lidarDataRelPath = systemConfiguration.getLidarWorkers().getLidars_data_path();
+        String lidarDataAbsPath = PathResolver.resolveRelativePath(lidarDataRelPath,configPath);
+        LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(lidarDataAbsPath);
 
-        // TODO: Parse configuration file.
+        //parse pose data
+        String poseDataRelPath = systemConfiguration.getPoseJsonFile();
+        String poseDataAbsPath = PathResolver.resolveRelativePath(poseDataRelPath,configPath);
+        PoseDataParser.parse(poseDataAbsPath);
+
+
 
 
         // TODO: Initialize system components and services.
@@ -80,9 +90,6 @@ public class GurionRockRunner {
             // Initialize the LidarWorker
 
             List<LiDarWorkerTracker> lidarWorkersList =systemConfiguration.getLidarWorkers().getLidarConfigurations();
-            String lidarDataRelPath = systemConfiguration.getLidarWorkers().getLidars_data_path();
-            String lidarDataAbsPath = PathResolver.resolveRelativePath(lidarDataRelPath,configPath);
-            LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(lidarDataAbsPath);
 
             for (LiDarWorkerTracker lidarWorker : lidarWorkersList) {
                 LiDarService lidarService = new LiDarService(lidarWorker);

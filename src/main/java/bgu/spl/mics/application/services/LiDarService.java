@@ -6,6 +6,7 @@ import bgu.spl.mics.application.objects.DetectedObject;
 import bgu.spl.mics.application.objects.LiDarWorkerTracker;
 import bgu.spl.mics.application.objects.TrackedObject;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,10 +43,13 @@ public class LiDarService extends MicroService {
         });
 
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast t) -> {
-            List<TrackedObject> trackedObjectsToSend = new LinkedList<>();
-            for (TrackedObject trackedObject : lidarTracker.getLastTrackedObjects()){
-                if (trackedObject.getTime() + lidarTracker.getFrequency() <= t.getTick()){
-                    trackedObjectsToSend.add(trackedObject);
+            List<TrackedObject> trackedObjectsToSend = new ArrayList<>();
+            List<TrackedObject> lastTrackedObject = lidarTracker.getLastTrackedObjects();
+            if(lastTrackedObject != null){
+                for (TrackedObject trackedObject : lidarTracker.getLastTrackedObjects()){
+                    if (trackedObject.getTime() + lidarTracker.getFrequency() <= t.getTick()){
+                        trackedObjectsToSend.add(trackedObject);
+                    }
                 }
             }
             if(!trackedObjectsToSend.isEmpty()){

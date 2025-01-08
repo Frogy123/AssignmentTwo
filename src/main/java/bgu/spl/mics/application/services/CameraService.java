@@ -56,12 +56,14 @@ public class CameraService extends MicroService {
                         statisticalFolder.incrementNumDetectedObjects(stampedDetectedObjects.getNumOfDetectedObjects()); // statistical
                         for(DetectedObject obj: stampedDetectedObjects.getDetectedObjects())
                             sendEvent( new DetectedObjectsEvent(stampedDetectedObjects)); // send Event
+                        System.out.println("DEBUG: CameraService" + camera.getId() + " sent DetectedObjectsEvent");
                     }
                     else handleError(errorDescription);
 
                 }
             }
         });
+        System.out.println("DEBUG: Finished subscribing CameraService" + camera.getId());
 
         this.subscribeBroadcast(TerminatedBroadcast.class, boradcast -> {
             if(boradcast.getSenderName().equals("TimeService")){
@@ -77,7 +79,7 @@ public class CameraService extends MicroService {
         });
         sendBroadcast(new createdBroadcast(this.getName()));
 
-        System.out.println("DEBUG: Finished initializing CameraService" + camera.getId());
+        System.err.println("DEBUG: Finished initializing CameraService" + camera.getId());
 
     }
 
