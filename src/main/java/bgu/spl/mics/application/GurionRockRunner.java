@@ -4,7 +4,7 @@ import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.application.services.*;
 import bgu.spl.mics.parsing.LidarParser;
 import bgu.spl.mics.parsing.PathResolver;
-import bgu.spl.mics.parsing.configurations.Cameras;
+import bgu.spl.mics.parsing.configurations.CameraConfiguration;
 import bgu.spl.mics.parsing.configurations.SystemConfiguration;
 import bgu.spl.mics.parsing.mergers.CameraMerger;
 import bgu.spl.mics.parsing.parsers.CameraDataParser;
@@ -80,9 +80,7 @@ public class GurionRockRunner {
             // Initialize the LidarWorker
 
             List<LiDarWorkerTracker> lidarWorkersList =systemConfiguration.getLidarWorkers().getLidarConfigurations();
-            String lidarDataRelPath = systemConfiguration.getLidarWorkers().getLidars_data_path();
-            String lidarDataAbsPath = PathResolver.resolveRelativePath(lidarDataRelPath,configPath);
-            LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(lidarDataAbsPath);
+            LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(systemConfiguration.getLidarWorkers().getLidars_data_path());
 
             for (LiDarWorkerTracker lidarWorker : lidarWorkersList) {
                 LiDarService lidarService = new LiDarService(lidarWorker);
