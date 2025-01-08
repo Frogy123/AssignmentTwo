@@ -89,9 +89,7 @@ public class GurionRockRunner {
             // Initialize the LidarWorker
 
             List<LiDarWorkerTracker> lidarWorkersList =systemConfiguration.getLidarWorkers().getLidarConfigurations();
-            String lidarDataRelPath = systemConfiguration.getLidarWorkers().getLidars_data_path();
-            String lidarDataAbsPath = PathResolver.resolveRelativePath(lidarDataRelPath,configPath);
-            LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(lidarDataAbsPath);
+            LiDarDataBase lidarDataBase = LiDarDataBase.getInstance(systemConfiguration.getLidarWorkers().getLidars_data_path());
 
             for (LiDarWorkerTracker lidarWorker : lidarWorkersList) {
                 LiDarService lidarService = new LiDarService(lidarWorker);

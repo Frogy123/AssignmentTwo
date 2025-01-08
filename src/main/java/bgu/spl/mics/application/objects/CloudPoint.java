@@ -7,8 +7,6 @@ package bgu.spl.mics.application.objects;
 public class CloudPoint {
     private double x;
     private double y;
-    private double z; //all cloud points have the same z value added for parsing
-
 
     // Constructor
     public CloudPoint(double x, double y) {
