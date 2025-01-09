@@ -1,0 +1,110 @@
+{
+  "Error": "GLaDOS has repurposed the robot to conduct endless cake-fetching tests. Success is a lie.",
+  "faultySensor": "Camera 1",
+  "LastFrame": [
+    {
+      "Name": "Camera 1",
+      "detectedObjects": {
+        "time": 8,
+        "detectedObjects": [
+          {
+            "id": "Chair_Base_2",
+            "description": "A Blue Chair with wooden legs"
+          },
+          {
+            "id": "ERROR",
+            "description": "GLaDOS has repurposed the robot to conduct endless cake-fetching tests. Success is a lie."
+          },
+          {
+            "id": "furniture_3",
+            "description": "Bed"
+          }
+        ]
+      }
+    },
+    {
+      "Name": "Camera 2",
+      "detectedObjects": {
+        "time": 8,
+        "detectedObjects": [
+          {
+            "id": "Wall_4",
+            "description": "Wall"
+          },
+          {
+            "id": "Wall_3",
+            "description": "Wall"
+          }
+        ]
+      }
+    }
+  ],
+  "poses": [
+    {
+      "x": 0.0,
+      "y": 0.0,
+      "yaw": 0.0,
+      "time": 1.0
+    },
+    {
+      "x": -3.2076,
+      "y": 0.0755,
+      "yaw": -87.49,
+      "time": 2.0
+    },
+    {
+      "x": -5.7074,
+      "y": 0.1484,
+      "yaw": -92.65,
+      "time": 3.0
+    },
+    {
+      "x": -4.953,
+      "y": 1.3106,
+      "yaw": 144.04,
+      "time": 4.0
+    },
+    {
+      "x": -4.817,
+      "y": 2.8094,
+      "yaw": 132.58,
+      "time": 5.0
+    },
+    {
+      "x": -3.16,
+      "y": 3.1058,
+      "yaw": -11.34,
+      "time": 6.0
+    },
+    {
+      "x": -2.366,
+      "y": 0.9327,
+      "yaw": -28.07,
+      "time": 7.0
+    },
+    {
+      "x": -1.118,
+      "y": 2.1373,
+      "yaw": 22.98,
+      "time": 8.0
+    },
+    {
+      "x": -0.436,
+      "y": 2.8818,
+      "yaw": 38.85,
+      "time": 9.0
+    },
+    {
+      "x": 0.0,
+      "y": 3.6,
+      "yaw": 57.3,
+      "time": 10.0
+    }
+  ],
+  "statisticalFolder": {
+    "systemRunTime": 10,
+    "numDetectedObjects": 34,
+    "numTrackedObjects": 24,
+    "numLandmarks": 10
+  }
+}
