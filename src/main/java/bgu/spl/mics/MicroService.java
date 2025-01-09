@@ -24,8 +24,8 @@ public abstract class MicroService implements Runnable {
     private boolean terminated = false;
     private final String name;
     private final MessageBus messageBus;
-    private final ConcurrentHashMap<Class<? extends Event>, Callback> eventCallbackMap;
-    private final ConcurrentHashMap<Class<? extends Broadcast>, Callback> brodcastCallbackMap;
+    private final ConcurrentHashMap<Class<? extends Event<?>>, Callback<?>> eventCallbackMap;
+    private final ConcurrentHashMap<Class<? extends Broadcast>, Callback<?>> brodcastCallbackMap;
     protected static int counter = 0;
 
 
@@ -107,8 +107,7 @@ public abstract class MicroService implements Runnable {
      * 	       			null in case no micro-service has subscribed to {@code e.getClass()}.
      */
     protected final <T> Future<T> sendEvent(Event<T> e) {
-        Future<T> future = messageBus.sendEvent(e);
-        return future;
+        return messageBus.sendEvent(e);
     }
 
     /**
