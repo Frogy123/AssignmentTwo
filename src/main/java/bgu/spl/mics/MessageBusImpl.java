@@ -138,6 +138,6 @@ public class MessageBusImpl implements MessageBus {
 
 	public <T> Boolean isSubscribedToEvent(Class<? extends Event<T>> type, MicroService m) {
 		RegisteredMicroService rm = regTable.get(m);
-				return eventSubsTable.get(type).contains(rm) && rm.eventSubs.contains(type);
+		return eventSubsTable.get(type).contains(rm) && rm.eventSubs.contains(type);
 	}
 }

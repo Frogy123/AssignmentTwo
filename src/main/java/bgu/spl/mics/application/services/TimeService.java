@@ -34,23 +34,24 @@ public class TimeService extends MicroService {
     @Override
     protected void initialize() {
 
-        currentTick = 0;
+        currentTick = 1;
         while(currentTick < duration & MicroService.counter > 1){
-            System.out.println("DEBUG: Tick:" + currentTick);
+
             try {
                 Thread.sleep(tickTime*1000L);
             } catch (InterruptedException e) {
                 sendBroadcast(new CrashedBroadcast("TimeService", "InterruptedException", currentTick));
             }
+            System.out.println("DEBUG: Tick:" + currentTick);
             sendBroadcast(new TickBroadcast(currentTick));
             currentTick++;
         }
         sendBroadcast(new TerminatedBroadcast("TimeService"));
         terminate();
 
-
-
     }
+
+
 
 
 

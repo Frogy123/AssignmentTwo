@@ -68,8 +68,8 @@ public class CameraTest {
 
     @Test
     public void testNoDetectedObjectsAtTime() {
-        // Time 4 - frequency = 4 - 2 = 2, which does not match any detection time
-        StampedDetectedObjects result = camera.getReadyToSendObjects(4);
+        // Time 6 - frequency = 6 - 2 = 4, which does not match any detection time
+        StampedDetectedObjects result = camera.getReadyToSendObjects(6);
 
         assertNull(result, "Expected null since there are no detected objects at time 2");
     }

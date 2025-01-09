@@ -11,7 +11,6 @@ public class CloudPoint {
     List<Double> coordinates = new ArrayList<>();
     private double x;
     private double y;
-    private double z; //all cloud points have the same z value added for parsing
 
 
     // Constructor
@@ -41,6 +40,5 @@ public class CloudPoint {
     public void initialize() {
         coordinates.add(x);
         coordinates.add(y);
-        coordinates.add(z);
     }
 }

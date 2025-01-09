@@ -31,4 +31,11 @@ public class StampedDetectedObjects {
     public int getNumOfDetectedObjects() {
         return detectedObjects.size();
     }
+
+    public String toString(){
+        String str = "";
+        for (DetectedObject object: detectedObjects)
+            str+=object.getId();
+        return str;
+    }
 }

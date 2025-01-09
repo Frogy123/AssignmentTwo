@@ -154,7 +154,7 @@ public class FusionSlamService extends MicroService {
 
     private File createOutputFile(Out out, String directoryPath) {
         // Determine the file name based on the type of 'out'
-        String fileName = out instanceof Error_Output ? "error_output.json" : "output.json";
+        String fileName = out instanceof Error_Output ? "error_output.json" : "output_file.json";
 
         try {
             // Ensure the directory exists

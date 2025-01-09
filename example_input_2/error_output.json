@@ -3,26 +3,6 @@
   "faultySensor": "Camera 1",
   "LastFrame": [
     {
-      "Name": "Camera 1",
-      "detectedObjects": {
-        "time": 8,
-        "detectedObjects": [
-          {
-            "id": "Chair_Base_2",
-            "description": "A Blue Chair with wooden legs"
-          },
-          {
-            "id": "ERROR",
-            "description": "GLaDOS has repurposed the robot to conduct endless cake-fetching tests. Success is a lie."
-          },
-          {
-            "id": "furniture_3",
-            "description": "Bed"
-          }
-        ]
-      }
-    },
-    {
       "Name": "Camera 2",
       "detectedObjects": {
         "time": 8,
@@ -93,18 +73,12 @@
       "y": 2.8818,
       "yaw": 38.85,
       "time": 9.0
-    },
-    {
-      "x": 0.0,
-      "y": 3.6,
-      "yaw": 57.3,
-      "time": 10.0
     }
   ],
   "statisticalFolder": {
-    "systemRunTime": 10,
-    "numDetectedObjects": 33,
-    "numTrackedObjects": 28,
-    "numLandmarks": 12
+    "systemRunTime": 9,
+    "numDetectedObjects": 34,
+    "numTrackedObjects": 23,
+    "numLandmarks": 10
   }
 }

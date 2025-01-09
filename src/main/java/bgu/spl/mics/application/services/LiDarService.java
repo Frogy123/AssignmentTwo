@@ -36,28 +36,31 @@ public class LiDarService extends MicroService {
     @Override
     protected void initialize() {
 
+
         subscribeEvent(DetectedObjectsEvent.class, (DetectedObjectsEvent t) -> {
             lidarTracker.trackObjects(t.getStampedObjects());
         });
 
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast t) -> {
-            List<TrackedObject> trackedObjectsToSend = new ArrayList<>();
-            if(LiDarDataBase.getInstance().getLastTime() < t.getTick()){
+            if(LiDarDataBase.getInstance().getLastTime() + lidarTracker.getFrequency()< t.getTick()){
                 sendBroadcast(new TerminatedBroadcast(this.getName()));
                 terminate();
             }
-            else if(lidarTracker.getLastTrackedObjects() != null){
 
+            List<TrackedObject> trackedObjectsToSend = new ArrayList<>();
+            if(lidarTracker.getLastTrackedObjects() != null){
                 for (TrackedObject trackedObject : lidarTracker.getLastTrackedObjects()){
                     if (trackedObject.getTime() + lidarTracker.getFrequency() <= t.getTick()){
                         trackedObjectsToSend.add(trackedObject);
                     }
                 }
             }
+
             if(!trackedObjectsToSend.isEmpty()){
                 for(TrackedObject trackedObjectToRemove: trackedObjectsToSend){
                     lidarTracker.getLastTrackedObjects().remove(trackedObjectToRemove);
-                }statisticalFolder.incrementNumTrackedObjects(trackedObjectsToSend.size()); // statistical
+                }
+                statisticalFolder.incrementNumTrackedObjects(trackedObjectsToSend.size()); // statistical
                 sendEvent(new TrackedObjectsEvent(trackedObjectsToSend));
             }
 
