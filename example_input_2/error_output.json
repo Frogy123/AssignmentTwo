@@ -103,8 +103,8 @@
   ],
   "statisticalFolder": {
     "systemRunTime": 10,
-    "numDetectedObjects": 34,
-    "numTrackedObjects": 24,
-    "numLandmarks": 10
+    "numDetectedObjects": 33,
+    "numTrackedObjects": 28,
+    "numLandmarks": 12
   }
 }

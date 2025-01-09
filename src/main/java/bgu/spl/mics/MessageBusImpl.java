@@ -54,9 +54,8 @@ public class MessageBusImpl implements MessageBus {
 		q.add(rm);
 
 		// add type as an event subscription of mine
-		synchronized (rm) {
-			rm.eventSubs.add(type);
-		}
+		rm.eventSubs.add(type);
+
 
 	}
 
@@ -66,12 +65,11 @@ public class MessageBusImpl implements MessageBus {
 		// add rm to the group of registered microservices subscribed to broadcast of type
 		broadcastSubsTable.putIfAbsent(type, new ConcurrentLinkedQueue<>());
 		Queue<RegisteredMicroService> lst = broadcastSubsTable.get(type);
-		synchronized (type) {
-			lst.add(rm);
-		}
+		lst.add(rm);
+
 		// add type as a broadcast subscription of mine
 		rm.broadcastSubs.add(type);
-			}
+	}
 
 	@Override
 	public <T> void complete(Event<T> e, T result) {
@@ -86,17 +84,14 @@ public class MessageBusImpl implements MessageBus {
 			rm.myMessageQueue.add(b);
 		}
 
-			}
+	}
 
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
 		Queue<RegisteredMicroService> subs = eventSubsTable.get(e.getClass());
 		synchronized(e.getClass()) {
 			RegisteredMicroService chosenRm = subs.remove(); // remove the first rm in the Queue
-			synchronized (chosenRm) {
-				chosenRm.myMessageQueue.add(e);
-			}
-
+			chosenRm.myMessageQueue.add(e);
 			subs.add(chosenRm); // insert it as last
 		}
 
@@ -110,7 +105,7 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public void register(MicroService m) {
 		regTable.put(m, new RegisteredMicroService());
-			}
+	}
 
 	@Override
 	public void unregister(MicroService m) {
@@ -123,7 +118,7 @@ public class MessageBusImpl implements MessageBus {
 			broadcastSubsTable.get(type).remove(toUnreg);
 		}
 
-			}
+	}
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
