@@ -91,10 +91,10 @@ public class CameraService extends MicroService {
     }
 
     private void handleError(String errorDescripition, int t){
-        sendBroadcast(new CrashedBroadcast(camera.getKey(), errorDescripition, t));
         camera.setStatus(STATUS.ERROR);
         writeLastFrame(t);
         terminate();
+        sendBroadcast(new CrashedBroadcast(camera.getKey(), errorDescripition, t));
     }
 
     public void writeLastFrame(int time){

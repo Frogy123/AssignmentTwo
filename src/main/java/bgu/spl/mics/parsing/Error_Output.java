@@ -9,14 +9,18 @@ public class Error_Output implements Out {
     String Error;
     String faultySensor;
     List<CameraOut> LastFrame;
-    //Lidar
+    List<LidarOut> LidarLastFrame;
     List<Pose> poses;
     StatisticalFolder statisticalFolder;
+    List<LandMark> landMarks;
+
     static Error_Output instance;
 
 
     public Error_Output(){
         LastFrame = new ArrayList<>();
+        LidarLastFrame = new ArrayList<>();
+        landMarks = new ArrayList<>();
     }
 
     public void writeError(String _Error, String _faultySensor, FusionSlam fs){
@@ -24,6 +28,7 @@ public class Error_Output implements Out {
         this.poses = fs.getPosesList();
         this.Error = _Error;
         this.faultySensor = _faultySensor;
+        landMarks = fs.getLandmarksList();
     }
 
     public static Error_Output getInstance(){
@@ -36,6 +41,9 @@ public class Error_Output implements Out {
 
     public void addCameraLastFrame(Camera c, int time){
         LastFrame.add(new CameraOut(c, time));
+    }
+    public void addLidarLastFrame(LiDarWorkerTracker l, List<TrackedObject> lastFrame){
+        LidarLastFrame.add(new LidarOut(l, lastFrame));
     }
 
 

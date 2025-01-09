@@ -3,6 +3,7 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.*;
+import bgu.spl.mics.parsing.Error_Output;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 public class LiDarService extends MicroService {
     private final LiDarWorkerTracker lidarTracker;
     private final StatisticalFolder statisticalFolder;
+    List<TrackedObject> lastFrame;
     /**
      * Constructor for LiDarService.
      *
@@ -26,6 +28,7 @@ public class LiDarService extends MicroService {
         super("LiDarService" + liDarTracker.getId());
         this.lidarTracker=liDarTracker;
         this.statisticalFolder = StatisticalFolder.getInstance();
+        this.lastFrame = new ArrayList<>();
     }
 
     /**
@@ -43,6 +46,7 @@ public class LiDarService extends MicroService {
 
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast t) -> {
             if(LiDarDataBase.getInstance().getLastTime() + lidarTracker.getFrequency()< t.getTick()){
+                Error_Output.getInstance().addLidarLastFrame(this.lidarTracker, lastFrame);
                 sendBroadcast(new TerminatedBroadcast(this.getName()));
                 terminate();
             }
@@ -60,7 +64,8 @@ public class LiDarService extends MicroService {
                 for(TrackedObject trackedObjectToRemove: trackedObjectsToSend){
                     lidarTracker.getLastTrackedObjects().remove(trackedObjectToRemove);
                 }
-                statisticalFolder.incrementNumTrackedObjects(trackedObjectsToSend.size()); // statistical
+                statisticalFolder.incrementNumTrackedObjects(trackedObjectsToSend.size());
+                lastFrame = trackedObjectsToSend;// statistical
                 sendEvent(new TrackedObjectsEvent(trackedObjectsToSend));
             }
 
@@ -68,11 +73,13 @@ public class LiDarService extends MicroService {
 
         subscribeBroadcast(TerminatedBroadcast.class, (TerminatedBroadcast t) -> {
             if (t.getSenderName().equals("TimeService")) {
+                Error_Output.getInstance().addLidarLastFrame(this.lidarTracker, lastFrame);
                 sendBroadcast(new TerminatedBroadcast(this.getName()));
                 terminate();
             }
         });
         subscribeBroadcast(CrashedBroadcast.class, (CrashedBroadcast t) -> {
+            Error_Output.getInstance().addLidarLastFrame(this.lidarTracker, lastFrame);
             sendBroadcast(new CrashedBroadcast(t.getSenderName(), t.getErrorMassage(), t.getTime()));
             terminate();
         });
