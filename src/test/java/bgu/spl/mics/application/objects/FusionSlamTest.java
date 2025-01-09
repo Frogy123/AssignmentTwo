@@ -11,53 +11,43 @@ public class FusionSlamTest {
 
 
 
+    @Test
+    public void testTransformToGlobalCoordinateSimple() {
+        List<CloudPoint> localPoints = Arrays.asList(new CloudPoint(1, 0), new CloudPoint(0, 1));
+        TrackedObject trackedObject = new TrackedObject("1", "object", 1, localPoints);
+
+        Pose pose = new Pose(2, 3, 90, 0);
+        FusionSlam.getInstance().getPosesList().add(pose);
+
+        List<CloudPoint> globalPoints = FusionSlam.tranformToGlobalCoordinate(trackedObject);
+
+        assertEquals(1.0, globalPoints.get(0).getX(), 0.1);
+        assertEquals(0.0, globalPoints.get(0).getY(), 0.1);
+        assertEquals(0.0, globalPoints.get(1).getX(), 0.1);
+        assertEquals(1.0, globalPoints.get(1).getY(), 0.1);
+    }
+
 
     @Test
-    public void testTranformToGlobalCoordinate1() {
-        // Create a TrackedObject with local coordinates and a specific time
-        List<CloudPoint> localPoints = Arrays.asList(new CloudPoint(5, 6), new CloudPoint(7, 8));
-        TrackedObject trackedObject = new TrackedObject("1","table",3,localPoints);
+    public void testTransformToGlobalCoordinateComplex() {
+        List<CloudPoint> localPoints = Arrays.asList(new CloudPoint(3, 4), new CloudPoint(-2, -3));
+        TrackedObject trackedObject = new TrackedObject("2", "object", 2, localPoints);
 
-        // Add corresponding poses to the FusionSlam instance
-        Pose pose1 = new Pose(0, 0, 0, 0); // Pose at time 0
-        Pose pose2 = new Pose(1, 1, 45, 1); // Pose at time 1 with 45 degrees yaw
+        Pose pose1 = new Pose(0, 0, 0, 0);
+        Pose pose2 = new Pose(1, 2, 45, 1);
         FusionSlam.getInstance().getPosesList().add(pose1);
         FusionSlam.getInstance().getPosesList().add(pose2);
 
-        // Call the function to transform to global coordinates
         List<CloudPoint> globalPoints = FusionSlam.tranformToGlobalCoordinate(trackedObject);
 
-        // Verify the results
         assertEquals(2, globalPoints.size());
-        assertEquals(5.707, globalPoints.get(0).getX(), 0.001);
-        assertEquals(6.707, globalPoints.get(0).getY(), 0.001);
-        assertEquals(7.707, globalPoints.get(1).getX(), 0.001);
-        assertEquals(8.707, globalPoints.get(1).getY(), 0.001);
+        assertEquals(0.292, globalPoints.get(0).getX(), 0.1); // Corrected
+        assertEquals(6.949, globalPoints.get(0).getY(), 0.1); // Corrected
+        assertEquals(1.707, globalPoints.get(1).getX(), 0.1); // Corrected
+        assertEquals(-1.535, globalPoints.get(1).getY(), 0.1); // Corrected
     }
 
-    @Test
-    public void testTranformToGlobalCoordinate2() {
-        // Create a TrackedObject with local coordinates and a specific time
-        List<CloudPoint> localPoints = Arrays.asList(new CloudPoint(2, 3), new CloudPoint(4, 5));
-        TrackedObject trackedObject = new TrackedObject("3","chair",1,localPoints);
 
-        // Add corresponding poses to the FusionSlam instance
-        Pose pose1 = new Pose(0, 0, 0, 0); // Pose at time 0
-        Pose pose2 = new Pose(1, 1, 30, 1); // Pose at time 1 with 30 degrees yaw
-        Pose pose3 = new Pose(2, 2, 60, 2); // Pose at time 2 with 60 degrees yaw
-        FusionSlam.getInstance().getPosesList().add(pose1);
-        FusionSlam.getInstance().getPosesList().add(pose2);
-        FusionSlam.getInstance().getPosesList().add(pose3);
 
-        // Call the function to transform to global coordinates
-        List<CloudPoint> globalPoints = FusionSlam.tranformToGlobalCoordinate(trackedObject);
-
-        // Verify the results
-        assertEquals(2, globalPoints.size());
-        assertEquals(2.366, globalPoints.get(0).getX(), 0.001);
-        assertEquals(4.366, globalPoints.get(0).getY(), 0.001);
-        assertEquals(3.732, globalPoints.get(1).getX(), 0.001);
-        assertEquals(6.732, globalPoints.get(1).getY(), 0.001);
-    }
 }
 

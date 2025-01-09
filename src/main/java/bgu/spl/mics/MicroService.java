@@ -145,7 +145,6 @@ public abstract class MicroService implements Runnable {
      * message.
      */
     protected final void terminate() {
-        System.err.println("DEBUG: " + this.getName() + " terminated");
         this.terminated = true;
         counter--;
     }
@@ -181,7 +180,6 @@ public abstract class MicroService implements Runnable {
                 }
 
         }
-        System.out.println("DEBUG:" + this.getName() + "stopped running");
         messageBus.unregister(this);
     }
 

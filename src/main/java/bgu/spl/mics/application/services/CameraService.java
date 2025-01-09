@@ -44,9 +44,7 @@ public class CameraService extends MicroService {
     protected void initialize() {
 
         this.subscribeBroadcast(TickBroadcast.class,(TickBroadcast t) -> {
-            System.out.println("DEBUG: camera got tick broadcast" + t.getTick());
             if(camera.getLastTime() + camera.getFrequency() < t.getTick()) {
-                System.out.println("DEBUG: camera detected all objects - terminating");
                 sendBroadcast(new TerminatedBroadcast(this.getName()));
                 terminate();
             }
