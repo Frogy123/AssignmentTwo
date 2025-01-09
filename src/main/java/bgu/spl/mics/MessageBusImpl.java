@@ -79,8 +79,7 @@ public class MessageBusImpl implements MessageBus {
 		Future<T> fut = (Future<T>) eventToFuture.get(e);
 		fut.resolve(result);
 		fut.isDone();
-
-			}
+	}
 
 	@Override
 	public void sendBroadcast(Broadcast b) {

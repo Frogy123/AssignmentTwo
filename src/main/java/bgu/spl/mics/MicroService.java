@@ -174,11 +174,6 @@ public abstract class MicroService implements Runnable {
                 try {
                     Message msg = messageBus.awaitMessage(this);
                     if (msg instanceof Event) {
-                        //DEBUG:
-                        if(msg instanceof DetectedObjectsEvent){
-                            System.out.println("DEBUG: DetectedObject event of time: " + ((DetectedObjectsEvent) msg).getStampedObjects().getTime());
-                        }
-
                         Callback callback = eventCallbackMap.get(msg.getClass());
                         callback.call(msg);
                     } else if (msg instanceof Broadcast) {
@@ -190,7 +185,7 @@ public abstract class MicroService implements Runnable {
                 }
 
         }
-
+        System.out.println("DEBUG:" + this.getName() + "stopped running");
         messageBus.unregister(this);
     }
 

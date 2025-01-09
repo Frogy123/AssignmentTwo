@@ -77,9 +77,6 @@ public class CameraService extends MicroService {
             terminate();
         });
         sendBroadcast(new createdBroadcast(this.getName()));
-
-        System.err.println("DEBUG: Finished initializing CameraService" + camera.getId());
-
     }
 
 
