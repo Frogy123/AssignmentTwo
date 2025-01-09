@@ -1,7 +1,5 @@
 package bgu.spl.mics;
 
-import bgu.spl.mics.application.messages.DetectedObjectsEvent;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -18,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * message-queue (see {@link MessageBus#register(bgu.spl.mics.MicroService)}
  * method). The abstract MicroService stores this callback together with the
  * type of the message is related to.
- *
  * Only private fields and methods may be added to this class.
  * <p>
  */
@@ -27,8 +24,8 @@ public abstract class MicroService implements Runnable {
     private boolean terminated = false;
     private final String name;
     private final MessageBus messageBus;
-    private ConcurrentHashMap<Class<? extends Event>, Callback> eventCallbackMap;
-    private ConcurrentHashMap<Class<? extends Broadcast>, Callback> brodcastCallbackMap;
+    private final ConcurrentHashMap<Class<? extends Event>, Callback> eventCallbackMap;
+    private final ConcurrentHashMap<Class<? extends Broadcast>, Callback> brodcastCallbackMap;
     protected static int counter = 0;
 
 

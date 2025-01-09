@@ -2,15 +2,12 @@ package bgu.spl.mics.parsing.parsers;
 
 import bgu.spl.mics.application.objects.GPSIMU;
 import bgu.spl.mics.application.objects.Pose;
-import bgu.spl.mics.application.objects.StampedCloudPoints;
-import bgu.spl.mics.parsing.configurations.RawStampedCloudPoints;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PoseDataParser {

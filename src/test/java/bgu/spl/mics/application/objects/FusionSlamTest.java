@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FusionSlamTest {
 
-    FusionSlam fs;
 
 
 
@@ -17,7 +16,7 @@ public class FusionSlamTest {
     public void testTranformToGlobalCoordinate1() {
         // Create a TrackedObject with local coordinates and a specific time
         List<CloudPoint> localPoints = Arrays.asList(new CloudPoint(5, 6), new CloudPoint(7, 8));
-        TrackedObject trackedObject = new TrackedObject(localPoints, 1);
+        TrackedObject trackedObject = new TrackedObject("1","table",3,localPoints);
 
         // Add corresponding poses to the FusionSlam instance
         Pose pose1 = new Pose(0, 0, 0, 0); // Pose at time 0
@@ -40,7 +39,7 @@ public class FusionSlamTest {
     public void testTranformToGlobalCoordinate2() {
         // Create a TrackedObject with local coordinates and a specific time
         List<CloudPoint> localPoints = Arrays.asList(new CloudPoint(2, 3), new CloudPoint(4, 5));
-        TrackedObject trackedObject = new TrackedObject(localPoints, 2);
+        TrackedObject trackedObject = new TrackedObject("3","chair",1,localPoints);
 
         // Add corresponding poses to the FusionSlam instance
         Pose pose1 = new Pose(0, 0, 0, 0); // Pose at time 0

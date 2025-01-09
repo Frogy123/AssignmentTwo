@@ -1,14 +1,9 @@
 package bgu.spl.mics.parsing.parsers;
 
-import bgu.spl.mics.application.objects.DetectedObject;
-import bgu.spl.mics.application.objects.StampedDetectedObjects;
-import bgu.spl.mics.parsing.configurations.CameraConfiguration;
 import bgu.spl.mics.parsing.configurations.SystemConfiguration;
 import com.google.gson.Gson;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 
 public class SystemConfigurationParser {

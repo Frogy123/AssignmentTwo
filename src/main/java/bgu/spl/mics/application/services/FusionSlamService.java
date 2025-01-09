@@ -7,6 +7,7 @@ import bgu.spl.mics.parsing.Error_Output;
 import bgu.spl.mics.parsing.Out;
 import bgu.spl.mics.parsing.Output;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -17,7 +18,6 @@ import java.util.List;
 /**
  * FusionSlamService integrates data from multiple sensors to build and update
  * the robot's global map.
- *
  * This service receives TrackedObjectsEvents from LiDAR workers and PoseEvents from the PoseService,
  * transforming and updating the map with new landmarks.
  */
@@ -183,10 +183,10 @@ public class FusionSlamService extends MicroService {
     private void writeOutput(File file, Out out){
         try {
             FileWriter myWriter = new FileWriter(file);
-            Gson gson = new Gson();
-            String json = gson.toJson(out);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();  // Added pretty printing
+            String json = gson.toJson(out);  // Convert the object to formatted JSON
 
-            myWriter.write(json);
+            myWriter.write(json);  // Write the formatted JSON to the file
             myWriter.close();
 
         } catch (IOException e) {

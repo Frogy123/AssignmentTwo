@@ -1,14 +1,13 @@
 package bgu.spl.mics.parsing;
 
 import bgu.spl.mics.application.objects.Camera;
-import bgu.spl.mics.application.objects.StampedCloudPoints;
 import bgu.spl.mics.application.objects.StampedDetectedObjects;
 
 import java.util.List;
 
 public class CameraOut {
     String Name;
-        StampedDetectedObjects detectedObjects;
+    StampedDetectedObjects detectedObjects;
 
     public CameraOut(Camera c, int time) {
         this.Name = c.getKey();

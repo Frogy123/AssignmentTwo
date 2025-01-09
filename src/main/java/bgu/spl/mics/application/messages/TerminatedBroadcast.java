@@ -4,7 +4,7 @@ import bgu.spl.mics.Broadcast;
 
 public class TerminatedBroadcast implements Broadcast
 {
-    private String name;
+    private final String name;
 
     public TerminatedBroadcast(String name)
     {

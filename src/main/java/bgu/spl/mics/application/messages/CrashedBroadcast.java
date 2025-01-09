@@ -3,9 +3,9 @@ package bgu.spl.mics.application.messages;
 import bgu.spl.mics.Broadcast;
 
 public class CrashedBroadcast implements Broadcast {
-    private String senderName;
-    private String errorMassage;
-    private int time;
+    private final String senderName;
+    private final String errorMassage;
+    private final int time;
 
     public CrashedBroadcast(String senderName, String _errorMassage, int time) {
         this.errorMassage = _errorMassage;

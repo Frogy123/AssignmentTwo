@@ -1,6 +1,5 @@
 package bgu.spl.mics.parsing.parsers;
 
-import bgu.spl.mics.application.objects.CloudPoint;
 import bgu.spl.mics.application.objects.StampedCloudPoints;
 import bgu.spl.mics.parsing.configurations.RawStampedCloudPoints;
 import com.google.gson.Gson;

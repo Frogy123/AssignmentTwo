@@ -4,7 +4,7 @@ import bgu.spl.mics.Event;
 
 public class ExampleEvent implements Event<String>{
 
-    private String senderName;
+    private final String senderName;
 
     public ExampleEvent(String senderName) {
         this.senderName = senderName;

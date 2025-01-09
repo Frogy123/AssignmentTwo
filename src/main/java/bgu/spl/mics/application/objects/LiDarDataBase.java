@@ -10,11 +10,11 @@ import java.util.concurrent.atomic.AtomicReference;
  * It provides access to cloud point data and other relevant information for tracked objects.
  */
 public class LiDarDataBase {
-    private List<StampedCloudPoints> data;
-    private static AtomicReference<String> path = new AtomicReference<>(null);;
+    private final List<StampedCloudPoints> data;
+    private static final AtomicReference<String> path = new AtomicReference<>(null);
 
     private static class InstanceHolder {
-        private static LiDarDataBase instance = new LiDarDataBase();
+        private static final LiDarDataBase instance = new LiDarDataBase();
     }
 
     private LiDarDataBase() {
@@ -43,8 +43,9 @@ public class LiDarDataBase {
      * searches for specific points
      * @param id - the id of the object
      * @param time - time of detection of the object
-     * @returns the matching cloud point if exists, otherwise, null
+     * @return the matching cloud point if exists, otherwise, null
      */
+    // all the lidarWorkers only read data - the LidarDataBase is not changed after  - no sync is needed
     public List<CloudPoint> findCloudPoints(String id, int time){
         for (StampedCloudPoints stampedCloudPoints: data){
             if (stampedCloudPoints.getId().equals(id) && stampedCloudPoints.getTime() == time)

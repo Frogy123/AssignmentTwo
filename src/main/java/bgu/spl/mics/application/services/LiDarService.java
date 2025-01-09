@@ -5,20 +5,18 @@ import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.*;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * LiDarService is responsible for processing data from the LiDAR sensor and
  * sending TrackedObjectsEvents to the FusionSLAM service.
- *
  * This service interacts with the LiDarTracker object to retrieve and process
  * cloud point data and updates the system's StatisticalFolder upon sending its
  * observations.
  */
 public class LiDarService extends MicroService {
-    private LiDarWorkerTracker lidarTracker;
-    private StatisticalFolder statisticalFolder;
+    private final LiDarWorkerTracker lidarTracker;
+    private final StatisticalFolder statisticalFolder;
     /**
      * Constructor for LiDarService.
      *

@@ -14,19 +14,14 @@ public class StampedCloudPoints {
 
 
     @SerializedName("time")
-    private int time;
+    private final int time;
 
     @SerializedName("id")
-    private String id;
+    private final String id;
 
-    private List<CloudPoint> cloudPoints;
+    private final List<CloudPoint> cloudPoints;
 
 
-    public StampedCloudPoints(String id, int time) {
-        this.id = id;
-        this.time = time;
-        cloudPoints = new ArrayList<>();
-    }
 
     public StampedCloudPoints(RawStampedCloudPoints rawStampedCloudPoints){
         this.id = rawStampedCloudPoints.getId();
@@ -46,13 +41,6 @@ public class StampedCloudPoints {
     public List<CloudPoint> getCloudPoints() {
         return cloudPoints;
     }
-    public void addCloudPoint(CloudPoint cloudPoint) {
-        this.cloudPoints.add(cloudPoint);
-    }
 
-    public void intializeCloudPoints() {
-        for(CloudPoint point:this.cloudPoints){
-            point.initialize();
-        }
-    }
+
 }

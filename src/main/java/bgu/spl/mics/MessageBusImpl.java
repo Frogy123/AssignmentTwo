@@ -1,5 +1,4 @@
 package bgu.spl.mics;
-import bgu.spl.mics.application.services.LiDarService;
 
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
@@ -17,9 +16,9 @@ public class MessageBusImpl implements MessageBus {
 
 
 	private class RegisteredMicroService {
-		private Queue<Class<? extends Event<?>>> eventSubs;
-		private Queue<Class<? extends Broadcast>> broadcastSubs;
-		private BlockingQueue<Message> myMessageQueue;
+		private final Queue<Class<? extends Event<?>>> eventSubs;
+		private final Queue<Class<? extends Broadcast>> broadcastSubs;
+		private final BlockingQueue<Message> myMessageQueue;
 
 		private RegisteredMicroService() {
 			eventSubs = new ConcurrentLinkedQueue<>();
@@ -31,7 +30,7 @@ public class MessageBusImpl implements MessageBus {
 	// SINGLETON:
 
 	private static class MessageBusHolder {
-		private static MessageBus messageBus = new MessageBusImpl();
+		private static final MessageBus messageBus = new MessageBusImpl();
 	}
 
 	private MessageBusImpl() {

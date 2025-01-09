@@ -2,17 +2,13 @@ package bgu.spl.mics.application;
 
 import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.application.services.*;
-import bgu.spl.mics.parsing.LidarParser;
 import bgu.spl.mics.parsing.PathResolver;
-import bgu.spl.mics.parsing.configurations.Cameras;
 import bgu.spl.mics.parsing.configurations.SystemConfiguration;
 import bgu.spl.mics.parsing.mergers.CameraMerger;
 import bgu.spl.mics.parsing.parsers.CameraDataParser;
 import bgu.spl.mics.parsing.parsers.PoseDataParser;
 import bgu.spl.mics.parsing.parsers.SystemConfigurationParser;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;

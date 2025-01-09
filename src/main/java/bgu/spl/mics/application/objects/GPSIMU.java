@@ -11,7 +11,7 @@ public class GPSIMU {
 
 
     private static class GPSIMUHolder{
-        private static GPSIMU instance = new GPSIMU();
+        private static final GPSIMU instance = new GPSIMU();
     }
 
     List<Pose> poses;
@@ -23,17 +23,13 @@ public class GPSIMU {
         currentTick++;
     }
 
-    public void setStatus(STATUS status){
-        this.status = status;
-    }
+
 
     public static GPSIMU getInstance(){
         return GPSIMUHolder.instance;
     }
 
-    public void addPose(Pose pose){
-        poses.add(pose);
-    }
+
 
     public Pose getCurrentPose(){
         return poses.get(currentTick);

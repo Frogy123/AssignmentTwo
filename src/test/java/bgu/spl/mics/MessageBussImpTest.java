@@ -3,7 +3,6 @@ package bgu.spl.mics;
 import bgu.spl.mics.example.messages.ExampleBroadcast;
 import bgu.spl.mics.example.messages.ExampleEvent;
 import bgu.spl.mics.example.services.ExampleBroadcastListenerService;
-import bgu.spl.mics.example.services.ExampleEventHandlerService;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -13,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MessageBussImpTest {
     private MessageBus messageBus;
     private MicroService microService;
-    private MicroService ms2;
 
 
     @BeforeEach

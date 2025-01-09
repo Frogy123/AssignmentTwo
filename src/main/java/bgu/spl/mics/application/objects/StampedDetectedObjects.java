@@ -11,12 +11,12 @@ import java.util.List;
  */
 public class StampedDetectedObjects {
     @SerializedName("time")
-    private int stampTime;
+    private final int stampTime;
     @SerializedName("detectedObjects")
-    private List<DetectedObject> detectedObjects;
+    private final List<DetectedObject> detectedObjects;
     public StampedDetectedObjects(int stampTime) {
         this.stampTime=stampTime;
-        detectedObjects = new ArrayList<DetectedObject>();
+        detectedObjects = new ArrayList<>();
     }
     public void addDetectedObject(DetectedObject detectedObject) {
         detectedObjects.add(detectedObject);

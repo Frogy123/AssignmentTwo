@@ -1,7 +1,5 @@
 package bgu.spl.mics.application.objects;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +8,7 @@ import java.util.List;
  * These points are used to generate a point cloud representing objects in the environment.
  */
 public class CloudPoint {
-    List<Double> coordinates = new ArrayList<Double>();
+    List<Double> coordinates = new ArrayList<>();
     private double x;
     private double y;
     private double z; //all cloud points have the same z value added for parsing
@@ -22,11 +20,7 @@ public class CloudPoint {
         this.y = y;
     }
 
-    public CloudPoint(double[] coordinates){
-        this.x = coordinates[0];
-        this.y = coordinates[1];
-        this.z = coordinates[2];
-    }
+
 
     public static CloudPoint average(CloudPoint oldCoordinate, CloudPoint newCoordinate) {
         double x = (oldCoordinate.getX() + newCoordinate.getX()) / 2;
@@ -41,15 +35,6 @@ public class CloudPoint {
 
     public double getY() {
         return y;
-    }
-
-    // Setters
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
     }
 
 
