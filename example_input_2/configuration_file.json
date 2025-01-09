@@ -1,20 +1,19 @@
 {
-    "Cameras": {
-      "CamerasConfigurations":[
-        {
-          "id": 1,
-          "frequency": 1,
-          "camera_key": "camera1"
-        },
-        {
-          "id": 2,
-          "frequency": 2,
-          "camera_key": "camera2"
-        }
-      ],
-      "camera_datas_path": "./camera_data.json"
-    },
-  "Lidars": {
+  "Cameras": {
+    "CamerasConfigurations":[
+      {
+        "id": 1,
+        "frequency": 1,
+        "camera_key": "camera1"
+      },{
+        "id": 2,
+        "frequency": 2,
+        "camera_key": "camera2"
+      }
+    ],
+    "camera_datas_path": "./camera_data.json"
+  },
+  "LiDarWorkers": {
     "LidarConfigurations":[{
       "id": 1,
       "frequency": 4
@@ -26,6 +25,6 @@
     "lidars_data_path":"./lidar_data.json"
   },
   "poseJsonFile": "./pose_data.json",
-  "TickTime": 1,
-  "Duration": 300
+  "TickTime": 2,
+  "Duration": 100
 }
